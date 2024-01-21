@@ -42,7 +42,13 @@ public class TodoInvoker extends InvokerWrapper {
 
     @InvocationHandler
     public CompletableFuture<Collection<TodoListItemView>> searchTodo(String query, int page){
-        return getQueryGateway().query(new TodoListItemViewSearchQuery(query, page, 15)).thenApply(Multiple::getData);
+        return getQueryGateway().query(new TodoListItemViewSearchQuery(query, page, 15))
+                .whenComplete((s,e) -> {
+                    System.out.println("ciao");
+                }).whenComplete((s,e) -> {
+                    System.out.println("ciao2");
+                }).thenApply(Multiple::getData)
+                ;
     }
 
     private Metadata toUserMetadata(String user) {

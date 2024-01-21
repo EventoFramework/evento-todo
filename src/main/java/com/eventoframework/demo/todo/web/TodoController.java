@@ -35,9 +35,10 @@ public class TodoController {
     @PostMapping("/")
     public TodoCreatedResponse createTodo(
             @RequestBody TodoCreateRequest request,
-            @RequestHeader(name = "Authorization") String user){
+            @RequestHeader(name = "Authorization") String user) throws InterruptedException {
         var identifier = UUID.randomUUID().toString();
         todoInvoker.createTodo(identifier, request.getContent(), user);
+        Thread.sleep(1000);
         return new TodoCreatedResponse(identifier);
     }
 
