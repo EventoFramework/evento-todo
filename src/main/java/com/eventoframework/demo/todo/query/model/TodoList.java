@@ -4,6 +4,7 @@ import com.eventoframework.demo.todo.api.view.TodoListListItemView;
 import com.eventoframework.demo.todo.api.view.TodoListView;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +28,7 @@ public class TodoList {
     private String updatedBy;
     private ZonedDateTime createdAt;
     private ZonedDateTime updatedAt;
-    @ElementCollection
+    @ElementCollection(fetch=FetchType.EAGER)
     private List<Todo> todos;
 
     public TodoListView toView() {

@@ -3,7 +3,7 @@ package com.eventoframework.demo.todo.query;
 import com.eventoframework.demo.todo.api.event.*;
 import com.eventoframework.demo.todo.query.model.Todo;
 import com.eventoframework.demo.todo.query.model.TodoList;
-import com.eventoframework.demo.todo.query.model.TodoRepository;
+import com.eventoframework.demo.todo.query.model.TodoListRepository;
 import com.evento.common.modeling.annotations.component.Projector;
 import com.evento.common.modeling.annotations.handler.EventHandler;
 import com.evento.common.modeling.messaging.message.application.EventMessage;
@@ -16,9 +16,9 @@ import java.util.ArrayList;
 @Projector(version = 1)
 public class TodoProjector {
 
-    private final TodoRepository repository;
+    private final TodoListRepository repository;
 
-    public TodoProjector(TodoRepository repository) {
+    public TodoProjector(TodoListRepository repository) {
         this.repository = repository;
     }
 

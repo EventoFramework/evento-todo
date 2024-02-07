@@ -5,7 +5,7 @@ import com.eventoframework.demo.todo.api.query.TodoListViewFindByIdentifierQuery
 import com.eventoframework.demo.todo.api.view.TodoListListItemView;
 import com.eventoframework.demo.todo.api.view.TodoListView;
 import com.eventoframework.demo.todo.query.model.TodoList;
-import com.eventoframework.demo.todo.query.model.TodoRepository;
+import com.eventoframework.demo.todo.query.model.TodoListRepository;
 import com.evento.common.modeling.annotations.component.Projection;
 import com.evento.common.modeling.annotations.handler.QueryHandler;
 import com.evento.common.modeling.messaging.query.Multiple;
@@ -15,9 +15,9 @@ import org.springframework.data.domain.PageRequest;
 @Projection()
 public class TodoProjection {
 
-    private final TodoRepository repository;
+    private final TodoListRepository repository;
 
-    public TodoProjection(TodoRepository repository) {
+    public TodoProjection(TodoListRepository repository) {
         this.repository = repository;
     }
 

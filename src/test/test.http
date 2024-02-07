@@ -3,7 +3,7 @@ Authorization: user1
 Content-Type: application/json
 
 {
-  "content": "Todo2"
+  "name": "Todo2"
 }
 
 > {%
@@ -18,12 +18,6 @@ Authorization: user1
 ###
 
 GET http://localhost:8080/todo/?query=Todo&page=0
-
-
-###
-
-PUT http://localhost:8080/todo/{{lastId}}?checked=true
-Authorization: user1
 
 ###
 
