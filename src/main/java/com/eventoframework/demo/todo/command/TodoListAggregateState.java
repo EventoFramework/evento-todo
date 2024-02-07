@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.evento.common.documentation.Domain;
-import org.evento.common.modeling.state.AggregateState;
+import com.evento.common.modeling.state.AggregateState;
+
+import java.util.HashMap;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoAggregateState extends AggregateState {
-    private boolean checked;
+public class TodoListAggregateState extends AggregateState {
+    private HashMap<String, Boolean> todos;
 }

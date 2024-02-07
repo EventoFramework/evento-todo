@@ -1,12 +1,12 @@
 package com.eventoframework.demo.todo.config;
 
 import com.eventoframework.demo.todo.TodoApplication;
-import org.evento.application.EventoBundle;
-import org.evento.application.bus.ClusterNodeAddress;
-import org.evento.application.bus.EventoServerMessageBusConfiguration;
-import org.evento.application.performance.TracingAgent;
-import org.evento.common.modeling.messaging.message.application.Message;
-import org.evento.common.modeling.messaging.message.application.Metadata;
+import com.evento.application.EventoBundle;
+import com.evento.application.bus.ClusterNodeAddress;
+import com.evento.application.bus.EventoServerMessageBusConfiguration;
+import com.evento.application.performance.TracingAgent;
+import com.evento.common.modeling.messaging.message.application.Message;
+import com.evento.common.modeling.messaging.message.application.Metadata;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

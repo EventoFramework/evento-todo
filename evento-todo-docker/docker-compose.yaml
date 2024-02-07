@@ -8,7 +8,7 @@ services:
     volumes:
       - ./data/postgres:/var/lib/postgresql/data/
   evento-server:
-    image: 'eventoframework/evento-server:latest'
+    image: 'eventoframework/evento-server:ev1.6.0'
     privileged: true
     restart: on-failure
     depends_on:

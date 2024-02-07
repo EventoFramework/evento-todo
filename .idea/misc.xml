@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="org.evento.common.modeling.annotations.component.Aggregate" />
+    <list size="9">
+      <item index="0" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.component.Aggregate" />
+      <item index="1" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.component.Projection" />
+      <item index="2" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.component.Projector" />
+      <item index="3" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.AggregateCommandHandler" />
+      <item index="4" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.EventHandler" />
+      <item index="5" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.EventSourcingHandler" />
+      <item index="6" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.InvocationHandler" />
+      <item index="7" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.QueryHandler" />
+      <item index="8" class="java.lang.String" itemvalue="org.evento.common.modeling.annotations.component.Aggregate" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_19" default="true" project-jdk-name="corretto-19" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="openjdk-21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ProjectType">

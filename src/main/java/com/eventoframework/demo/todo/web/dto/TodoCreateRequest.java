@@ -1,4 +1,4 @@
-package com.eventoframework.demo.todo.web;
+package com.eventoframework.demo.todo.web.dto;
 
 import lombok.Data;
 

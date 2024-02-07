@@ -5,9 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.Optional;
-
-public interface TodoRepository extends JpaRepository<Todo, String> {
-    @Query("select t from Todo t where t.content like ?1")
-    Page<Todo> search(String query, PageRequest pa);
+public interface TodoRepository extends JpaRepository<TodoList, String> {
+    @Query("select t from TodoList t where t.content like ?1")
+    Page<TodoList> search(String query, PageRequest pa);
 }

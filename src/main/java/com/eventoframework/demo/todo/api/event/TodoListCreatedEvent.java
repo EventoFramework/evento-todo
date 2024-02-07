@@ -4,16 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.evento.common.documentation.Domain;
-import org.evento.common.modeling.messaging.payload.DomainEvent;
+import com.evento.common.documentation.Domain;
+import com.evento.common.modeling.messaging.payload.DomainEvent;
 
-@Domain(name = "Todo")
+@Domain(name = "TodoList")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoCheckedSetEvent extends DomainEvent {
+public class TodoListCreatedEvent extends DomainEvent {
 
     private String identifier;
-    private boolean checked;
+    private String content;
 }

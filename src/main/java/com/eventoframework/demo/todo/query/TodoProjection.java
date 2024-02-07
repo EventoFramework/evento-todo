@@ -1,16 +1,16 @@
 package com.eventoframework.demo.todo.query;
 
-import com.eventoframework.demo.todo.api.query.TodoListItemViewSearchQuery;
-import com.eventoframework.demo.todo.api.query.TodoViewFindByIdentifierQuery;
-import com.eventoframework.demo.todo.api.view.TodoListItemView;
-import com.eventoframework.demo.todo.api.view.TodoView;
+import com.eventoframework.demo.todo.api.query.TodoListListItemViewSearchQuery;
+import com.eventoframework.demo.todo.api.query.TodoListViewFindByIdentifierQuery;
+import com.eventoframework.demo.todo.api.view.TodoListListItemView;
+import com.eventoframework.demo.todo.api.view.TodoListView;
+import com.eventoframework.demo.todo.query.model.TodoList;
 import com.eventoframework.demo.todo.query.model.TodoRepository;
-import org.evento.common.modeling.annotations.component.Projection;
-import org.evento.common.modeling.annotations.handler.QueryHandler;
-import org.evento.common.modeling.messaging.query.Multiple;
-import org.evento.common.modeling.messaging.query.Single;
+import com.evento.common.modeling.annotations.component.Projection;
+import com.evento.common.modeling.annotations.handler.QueryHandler;
+import com.evento.common.modeling.messaging.query.Multiple;
+import com.evento.common.modeling.messaging.query.Single;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.Query;
 
 @Projection()
 public class TodoProjection {
@@ -22,19 +22,13 @@ public class TodoProjection {
     }
 
     @QueryHandler
-    public Single<TodoView> handle(TodoViewFindByIdentifierQuery query){
-        return Single.of(repository.findById(query.getIdentifier()).map(t -> new TodoView(t.getIdentifier(),
-                t.getContent(),
-                t.isCompleted(),
-                t.getCreatedBy(),
-                t.getCompletedBy(),
-                t.getCreatedAt(),
-                t.getCompletedAt())).orElseThrow());
+    public Single<TodoListView> handle(TodoListViewFindByIdentifierQuery query){
+        return Single.of(repository.findById(query.getIdentifier()).map(TodoList::toView).orElseThrow());
     }
 
     @QueryHandler
-    public Multiple<TodoListItemView> handle(TodoListItemViewSearchQuery query){
+    public Multiple<TodoListListItemView> handle(TodoListListItemViewSearchQuery query){
         return Multiple.of(repository.search("%" + query.getQuery() + "%", PageRequest.of(query.getPage(), query.getSize()))
-                .map(t ->new TodoListItemView(t.getIdentifier(), t.getContent(), t.isCompleted())).toList());
+                .map(TodoList::toListItemView).toList());
     }
 }

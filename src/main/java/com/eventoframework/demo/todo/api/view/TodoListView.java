@@ -1,25 +1,26 @@
 package com.eventoframework.demo.todo.api.view;
 
+import com.evento.common.documentation.Domain;
+import com.evento.common.modeling.messaging.payload.View;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.evento.common.documentation.Domain;
-import com.evento.common.modeling.messaging.payload.View;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 
 @Domain(name = "TodoList")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoView implements View {
+public class TodoListView implements View {
     private String identifier;
     private String content;
-    private boolean completed;
+    private ArrayList<TodoView> todos;
     private String createdBy;
-    private String completedBy;
+    private String updatedBy;
     private ZonedDateTime createdAt;
-    private ZonedDateTime completedAt;
+    private ZonedDateTime updatedAt;
 }

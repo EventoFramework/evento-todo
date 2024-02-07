@@ -4,16 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.evento.common.documentation.Domain;
-import org.evento.common.modeling.messaging.payload.View;
+import com.evento.common.documentation.Domain;
+import com.evento.common.modeling.messaging.payload.View;
 
-@Domain(name = "Todo")
+@Domain(name = "TodoList")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoListItemView extends View {
+public class TodoListListItemView implements View {
     private String identifier;
-    private String content;
-    private boolean completed;
+    private String name;
 }

@@ -1,5 +1,7 @@
 package com.eventoframework.demo.todo.query.model;
 
+import com.eventoframework.demo.todo.api.view.TodoView;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -9,19 +11,28 @@ import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
-@Entity
+@Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class Todo {
-    @Id
     private String identifier;
     private String content;
-    private boolean completed;
     private String createdBy;
     private String completedBy;
     private ZonedDateTime createdAt;
     private ZonedDateTime completedAt;
 
+    public TodoView toView() {
+        return new TodoView(
+                identifier,
+                content,
+                completedAt != null,
+                createdBy,
+                completedBy,
+                createdAt,
+                completedAt
+        );
+    }
 }
