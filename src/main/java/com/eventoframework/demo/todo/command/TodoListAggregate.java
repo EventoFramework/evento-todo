@@ -1,7 +1,6 @@
 package com.eventoframework.demo.todo.command;
 
 import com.eventoframework.demo.todo.api.command.*;
-import com.eventoframework.demo.todo.api.command.TodoDeleteCommand;
 import com.eventoframework.demo.todo.api.event.*;
 import com.evento.common.modeling.annotations.component.Aggregate;
 import com.evento.common.modeling.annotations.handler.AggregateCommandHandler;
