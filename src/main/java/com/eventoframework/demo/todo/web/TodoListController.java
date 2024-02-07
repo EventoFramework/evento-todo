@@ -7,6 +7,9 @@ import com.evento.application.EventoBundle;
 import com.eventoframework.demo.todo.web.dto.CreatedResponse;
 import com.eventoframework.demo.todo.web.dto.TodoCreateRequest;
 import com.eventoframework.demo.todo.web.dto.TodoListCreateRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -23,53 +26,56 @@ public class TodoListController {
     }
 
     @GetMapping("/")
-    public CompletableFuture<Collection<TodoListListItemView>> searchTodoList(
+    public CompletableFuture<ResponseEntity<Collection<TodoListListItemView>>> searchTodoList(
             String query, int page
     ) {
-        return todoInvoker.searchTodoList(query, page);
+        return todoInvoker.searchTodoList(query, page).thenApply(ResponseEntity::ok);
     }
 
     @GetMapping("/{identifier}")
-    public CompletableFuture<TodoListView> findTodoListByIdentifier(
+    public CompletableFuture<ResponseEntity<TodoListView>> findTodoListByIdentifier(
             @PathVariable String identifier) {
-        return todoInvoker.findTodoListByIdentifier(identifier);
+        return todoInvoker.findTodoListByIdentifier(identifier).thenApply(ResponseEntity::ok);
     }
 
     @PostMapping("/")
-    public CreatedResponse createTodoList(
+    public ResponseEntity<CreatedResponse> createTodoList(
             @RequestBody TodoListCreateRequest request, @RequestHeader(name = "Authorization") String user) {
-        return new CreatedResponse(todoInvoker.createTodoList(request.getName(), user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedResponse(todoInvoker.createTodoList(request.getName(), user)));
     }
 
 
     @DeleteMapping("/{identifier}")
-    public void deleteTodoList(
+    public ResponseEntity<Void> deleteTodoList(
             @PathVariable String identifier,
             @RequestHeader(name = "Authorization") String user) {
         todoInvoker.deleteTodoList(identifier, user);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{identifier}/")
-    public CreatedResponse addTodo(
+    public ResponseEntity<CreatedResponse> addTodo(
             @PathVariable String identifier,
             @RequestBody TodoCreateRequest request,
             @RequestHeader(name = "Authorization") String user) {
-        return new CreatedResponse(todoInvoker.addTodo(identifier, request.getContent(), user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedResponse(todoInvoker.addTodo(identifier, request.getContent(), user)));
     }
 
     @DeleteMapping("/{identifier}/{todoIdentifier}")
-    public void removeTodo(
+    public ResponseEntity<Void> removeTodo(
             @PathVariable String identifier,
             @PathVariable String todoIdentifier,
             @RequestHeader(name = "Authorization") String user) {
         todoInvoker.removeTodo(identifier, todoIdentifier, user);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{identifier}/{todoIdentifier}")
-    public void checkTodo(
+    public ResponseEntity<Void> checkTodo(
             @PathVariable String identifier,
             @PathVariable String todoIdentifier,
             @RequestHeader(name = "Authorization") String user) {
         todoInvoker.checkTodo(identifier, todoIdentifier, user);
+        return ResponseEntity.accepted().build();
     }
 }

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 @Setter
 public class TodoListView implements View {
     private String identifier;
-    private String content;
+    private String name;
     private ArrayList<TodoView> todos;
     private String createdBy;
     private String updatedBy;
