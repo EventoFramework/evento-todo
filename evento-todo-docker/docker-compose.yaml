@@ -2,24 +2,32 @@ version: '3.3'
 services:
   evento-db:
     image: 'postgres:latest'
+    restart: always
     environment:
       - POSTGRES_PASSWORD=secret
       - POSTGRES_DB=evento
     volumes:
       - ./data/postgres:/var/lib/postgresql/data/
   evento-server:
-    image: 'eventoframework/evento-server:ev1.6.0'
+    image: 'eventoframework/evento-server:latest'
     privileged: true
     restart: on-failure
     depends_on:
       - evento-db
     environment:
+      # Cluster name visualized on the GUI
       - evento_cluster_name=evento-server
+      # Capture rate for internal telemetry
       - evento_performance_capture_rate=1
+      # Telemetry data TTL
       - evento_telemetry_ttl=365
+      # Upload directory for Bundle Registration
       - evento_file_upload-dir=/server_upload
+      # Secret key used to generate JWT access tokens
       - evento_security_signing_key=MY_JWT_SECRET_TOKEN_SEED
+      # Evento Deploy Spawn Script Path
       - evento_deploy_spawn_script=/script/spawn.py
+      # Postgres Database Connection Parameters
       - spring_datasource_url=jdbc:postgresql://evento-db:5432/evento
       - spring_datasource_username=postgres
       - spring_datasource_password=secret
@@ -29,5 +37,3 @@ services:
     volumes:
       - ./data/evento/files:/server_upload
       - ./docker-spawn.py:/script/spawn.py
-
-
