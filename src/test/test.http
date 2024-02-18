@@ -20,19 +20,47 @@ Authorization: user1
 Content-Type: application/json
 
 {
-  "content": "Simple Todo"
+  "content": "Simple Todo 1"
 }
 
 > {%
     client.test("Request executed successfully (No Content - 201)", function() {
         client.assert(response.status === 201, "Response status is not 201");
     });
-    client.global.set("lastTodoId", response.body.identifier)
+    client.global.set("todo1", response.body.identifier)
 %}
 
 ###
 
-PUT http://localhost:8080/todo-list/{{lastId}}/todo/{{lastTodoId}}
+POST http://localhost:8080/todo-list/{{lastId}}/todo/
+Authorization: user1
+Content-Type: application/json
+
+{
+  "content": "Simple Todo 2"
+}
+
+> {%
+    client.test("Request executed successfully (No Content - 201)", function() {
+        client.assert(response.status === 201, "Response status is not 201");
+    });
+    client.global.set("todo2", response.body.identifier)
+%}
+
+###
+
+PUT http://localhost:8080/todo-list/{{lastId}}/todo/{{todo1}}
+Authorization: user1
+
+> {%
+    client.test("Request executed successfully (No Content - 202)", function() {
+        client.assert(response.status === 202, "Response status is not 202");
+    });
+%}
+
+###
+
+PUT http://localhost:8080/todo-list/{{lastId}}/todo/{{todo2}}
 Authorization: user1
 
 > {%

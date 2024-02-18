@@ -12,9 +12,9 @@ import java.util.HashMap;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErpTodoListRegisteredEvent extends ServiceEvent {
-    private String todoListIdentifier;
+public class ErpUserActivityRegisteredEvent extends ServiceEvent {
+    private String resourceType;
+    private String resourceIdentifier;
     private HashMap<String, Integer> contributions;
-
 
 }

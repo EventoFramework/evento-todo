@@ -1,5 +1,6 @@
 package com.eventoframework.demo.todo.query;
 
+import com.eventoframework.demo.todo.api.erp.event.ErpUserActivityRegisteredEvent;
 import com.eventoframework.demo.todo.api.todo.event.*;
 import com.eventoframework.demo.todo.query.model.Todo;
 import com.eventoframework.demo.todo.query.model.TodoList;
@@ -7,6 +8,7 @@ import com.eventoframework.demo.todo.query.model.TodoListRepository;
 import com.evento.common.modeling.annotations.component.Projector;
 import com.evento.common.modeling.annotations.handler.EventHandler;
 import com.evento.common.modeling.messaging.message.application.EventMessage;
+import com.eventoframework.demo.todo.query.model.TodoListStatus;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -31,7 +33,9 @@ public class TodoProjector {
                 null,
                 Instant.ofEpochMilli(message.getTimestamp()).atZone(ZoneId.systemDefault()),
                 null,
-                new ArrayList<>()
+                new ArrayList<>(),
+                null,
+                TodoListStatus.WIP
         ));
     }
 
@@ -74,6 +78,19 @@ public class TodoProjector {
         td.setCompletedBy(message.getMetadata().get("user"));
         list.setUpdatedAt(td.getCompletedAt());
         list.setUpdatedBy(td.getCompletedBy());
+        if(list.getTodos().stream().allMatch((Todo t) -> t.getCompletedAt() != null)){
+            list.setStatus(TodoListStatus.COMPLETED);
+        }
         repository.save(list);
+    }
+
+    @EventHandler
+    public void on(ErpUserActivityRegisteredEvent event){
+        if("TodoList".equals(event.getResourceType())){
+            var list = repository.findById(event.getResourceIdentifier()).orElseThrow();
+            list.setRegisteredAt(ZonedDateTime.now());
+            list.setStatus(TodoListStatus.REGISTERED);
+            repository.save(list);
+        }
     }
 }

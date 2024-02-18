@@ -30,6 +30,8 @@ public class TodoList {
     private ZonedDateTime updatedAt;
     @ElementCollection(fetch=FetchType.EAGER)
     private List<Todo> todos;
+    private ZonedDateTime registeredAt;
+    private TodoListStatus status;
 
     public TodoListView toView() {
         return new TodoListView(getIdentifier(),

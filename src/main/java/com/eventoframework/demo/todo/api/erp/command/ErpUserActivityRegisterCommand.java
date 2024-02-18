@@ -12,13 +12,14 @@ import java.util.HashMap;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErpRegisterTodoListCommand implements ServiceCommand {
+public class ErpUserActivityRegisterCommand implements ServiceCommand {
 
-    private String todoListIdentifier;
+    private String resourceType;
+    private String resourceIdentifier;
     private HashMap<String, Integer> contributions;
 
     @Override
     public String getLockId() {
-        return "ERPTDL_" + todoListIdentifier;
+        return "ACT_" + resourceType + "_" + resourceIdentifier;
     }
 }
