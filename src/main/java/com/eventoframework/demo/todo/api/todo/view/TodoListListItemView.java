@@ -1,19 +1,18 @@
-package com.eventoframework.demo.todo.api.event;
+package com.eventoframework.demo.todo.api.todo.view;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import com.evento.common.documentation.Domain;
-import com.evento.common.modeling.messaging.payload.DomainEvent;
+import com.evento.common.modeling.messaging.payload.View;
 
 @Domain(name = "TodoList")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoListTodoCheckedEvent extends DomainEvent {
-
+public class TodoListListItemView implements View {
     private String identifier;
-    private String todoIdentifier;
+    private String name;
 }

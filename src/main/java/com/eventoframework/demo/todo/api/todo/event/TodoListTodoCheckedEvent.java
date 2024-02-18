@@ -1,24 +1,19 @@
-package com.eventoframework.demo.todo.api.command;
+package com.eventoframework.demo.todo.api.todo.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import com.evento.common.documentation.Domain;
-import com.evento.common.modeling.messaging.payload.DomainCommand;
+import com.evento.common.modeling.messaging.payload.DomainEvent;
 
 @Domain(name = "TodoList")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoListAddTodoCommand implements DomainCommand {
+public class TodoListTodoCheckedEvent extends DomainEvent {
 
     private String identifier;
     private String todoIdentifier;
-    private String content;
-    @Override
-    public String getAggregateId() {
-        return identifier;
-    }
 }

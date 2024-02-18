@@ -1,10 +1,10 @@
-package com.eventoframework.demo.todo.command;
+package com.eventoframework.demo.todo.command.todo;
 
-import com.eventoframework.demo.todo.api.command.*;
-import com.eventoframework.demo.todo.api.event.*;
 import com.evento.common.modeling.annotations.component.Aggregate;
 import com.evento.common.modeling.annotations.handler.AggregateCommandHandler;
 import com.evento.common.modeling.annotations.handler.EventSourcingHandler;
+import com.eventoframework.demo.todo.api.todo.command.*;
+import com.eventoframework.demo.todo.api.todo.event.*;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;

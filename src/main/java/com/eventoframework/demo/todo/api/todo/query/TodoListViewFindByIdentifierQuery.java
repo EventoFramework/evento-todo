@@ -1,7 +1,6 @@
-package com.eventoframework.demo.todo.api.query;
+package com.eventoframework.demo.todo.api.todo.query;
 
-import com.eventoframework.demo.todo.api.view.TodoListView;
-import com.eventoframework.demo.todo.api.view.TodoView;
+import com.eventoframework.demo.todo.api.todo.view.TodoListView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

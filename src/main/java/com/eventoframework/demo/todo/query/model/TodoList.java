@@ -1,7 +1,7 @@
 package com.eventoframework.demo.todo.query.model;
 
-import com.eventoframework.demo.todo.api.view.TodoListListItemView;
-import com.eventoframework.demo.todo.api.view.TodoListView;
+import com.eventoframework.demo.todo.api.todo.view.TodoListListItemView;
+import com.eventoframework.demo.todo.api.todo.view.TodoListView;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

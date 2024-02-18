@@ -1,4 +1,4 @@
-package com.eventoframework.demo.todo.command;
+package com.eventoframework.demo.todo.command.todo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

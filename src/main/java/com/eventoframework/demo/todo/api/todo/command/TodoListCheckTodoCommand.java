@@ -1,4 +1,4 @@
-package com.eventoframework.demo.todo.api.command;
+package com.eventoframework.demo.todo.api.todo.command;
 
 import com.evento.common.documentation.Domain;
 import com.evento.common.modeling.messaging.payload.DomainCommand;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoListRemoveTodoCommand implements DomainCommand {
+public class TodoListCheckTodoCommand implements DomainCommand {
 
     private String identifier;
     private String todoIdentifier;

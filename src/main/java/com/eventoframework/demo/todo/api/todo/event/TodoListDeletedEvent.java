@@ -1,4 +1,4 @@
-package com.eventoframework.demo.todo.api.event;
+package com.eventoframework.demo.todo.api.todo.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,8 +12,7 @@ import com.evento.common.modeling.messaging.payload.DomainEvent;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoListCreatedEvent extends DomainEvent {
+public class TodoListDeletedEvent extends DomainEvent {
 
     private String identifier;
-    private String content;
 }

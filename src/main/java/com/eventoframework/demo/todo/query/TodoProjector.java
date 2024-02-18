@@ -1,6 +1,6 @@
 package com.eventoframework.demo.todo.query;
 
-import com.eventoframework.demo.todo.api.event.*;
+import com.eventoframework.demo.todo.api.todo.event.*;
 import com.eventoframework.demo.todo.query.model.Todo;
 import com.eventoframework.demo.todo.query.model.TodoList;
 import com.eventoframework.demo.todo.query.model.TodoListRepository;
@@ -42,7 +42,7 @@ public class TodoProjector {
 
     @EventHandler
     public void on(TodoListTodoAddedEvent event, EventMessage<TodoListCreatedEvent> message) {
-        var list = repository.findById(event.getTodoIdentifier()).orElseThrow();
+        var list = repository.findById(event.getIdentifier()).orElseThrow();
         var td = new Todo(
                 event.getTodoIdentifier(),
                 event.getContent(),
@@ -59,7 +59,7 @@ public class TodoProjector {
 
     @EventHandler
     public void on(TodoListTodoRemovedEvent event, EventMessage<TodoListCreatedEvent> message) {
-        var list = repository.findById(event.getTodoIdentifier()).orElseThrow();
+        var list = repository.findById(event.getIdentifier()).orElseThrow();
         list.getTodos().removeIf(t -> event.getTodoIdentifier().equals(t.getIdentifier()));
         list.setUpdatedAt(ZonedDateTime.now());
         list.setUpdatedBy(message.getMetadata().get("user"));
@@ -68,7 +68,7 @@ public class TodoProjector {
 
     @EventHandler
     public void on(TodoListTodoCheckedEvent event, EventMessage<TodoListCreatedEvent> message) {
-        var list = repository.findById(event.getTodoIdentifier()).orElseThrow();
+        var list = repository.findById(event.getIdentifier()).orElseThrow();
         var td = list.getTodos().stream().filter(t -> event.getTodoIdentifier().equals(t.getIdentifier())).findFirst().orElseThrow();
         td.setCompletedAt(ZonedDateTime.now());
         td.setCompletedBy(message.getMetadata().get("user"));

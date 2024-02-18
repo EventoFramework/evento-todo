@@ -1,4 +1,4 @@
-package com.eventoframework.demo.todo.api.view;
+package com.eventoframework.demo.todo.api.todo.view;
 
 import com.evento.common.documentation.Domain;
 import com.evento.common.modeling.messaging.payload.View;

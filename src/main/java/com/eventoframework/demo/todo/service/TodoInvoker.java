@@ -1,10 +1,10 @@
 package com.eventoframework.demo.todo.service;
 
-import com.eventoframework.demo.todo.api.command.*;
-import com.eventoframework.demo.todo.api.query.TodoListListItemViewSearchQuery;
-import com.eventoframework.demo.todo.api.query.TodoListViewFindByIdentifierQuery;
-import com.eventoframework.demo.todo.api.view.TodoListListItemView;
-import com.eventoframework.demo.todo.api.view.TodoListView;
+import com.eventoframework.demo.todo.api.todo.command.*;
+import com.eventoframework.demo.todo.api.todo.query.TodoListListItemViewSearchQuery;
+import com.eventoframework.demo.todo.api.todo.query.TodoListViewFindByIdentifierQuery;
+import com.eventoframework.demo.todo.api.todo.view.TodoListListItemView;
+import com.eventoframework.demo.todo.api.todo.view.TodoListView;
 import com.evento.application.proxy.InvokerWrapper;
 import com.evento.common.modeling.annotations.component.Invoker;
 import com.evento.common.modeling.annotations.handler.InvocationHandler;

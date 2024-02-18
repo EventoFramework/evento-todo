@@ -1,8 +1,7 @@
-package com.eventoframework.demo.todo.api.event;
+package com.eventoframework.demo.todo.api.todo.command;
 
 import com.evento.common.documentation.Domain;
 import com.evento.common.modeling.messaging.payload.DomainCommand;
-import com.evento.common.modeling.messaging.payload.DomainEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +12,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoListTodoAddedEvent extends DomainEvent {
-
+public class TodoListCreateCommand implements DomainCommand {
+    
     private String identifier;
-    private String todoIdentifier;
-    private String content;
+    private String name;
+    
+    @Override
+    public String getAggregateId() {
+        return identifier;
+    }
 }

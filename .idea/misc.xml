@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
-    <list size="9">
+    <list size="11">
       <item index="0" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.component.Aggregate" />
       <item index="1" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.component.Projection" />
       <item index="2" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.component.Projector" />
-      <item index="3" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.AggregateCommandHandler" />
-      <item index="4" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.EventHandler" />
-      <item index="5" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.EventSourcingHandler" />
-      <item index="6" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.InvocationHandler" />
-      <item index="7" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.QueryHandler" />
-      <item index="8" class="java.lang.String" itemvalue="org.evento.common.modeling.annotations.component.Aggregate" />
+      <item index="3" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.component.Service" />
+      <item index="4" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.AggregateCommandHandler" />
+      <item index="5" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.CommandHandler" />
+      <item index="6" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.EventHandler" />
+      <item index="7" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.EventSourcingHandler" />
+      <item index="8" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.InvocationHandler" />
+      <item index="9" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.QueryHandler" />
+      <item index="10" class="java.lang.String" itemvalue="org.evento.common.modeling.annotations.component.Aggregate" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

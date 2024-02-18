@@ -1,9 +1,9 @@
-POST http://localhost:8080/todo/
+POST http://localhost:8080/todo-list/
 Authorization: user1
 Content-Type: application/json
 
 {
-  "name": "Sample Todo"
+  "name": "Sample Todo List"
 }
 
 > {%
@@ -15,44 +15,28 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/todo/{{lastId}}
+POST http://localhost:8080/todo-list/{{lastId}}/todo/
 Authorization: user1
+Content-Type: application/json
 
+{
+  "content": "Simple Todo"
+}
 
 > {%
-    client.test("Request executed successfully (Ok - 200)", function() {
-        client.assert(response.status === 200, "Response status is not 200");
+    client.test("Request executed successfully (No Content - 201)", function() {
+        client.assert(response.status === 201, "Response status is not 201");
     });
-    client.test("Response correct", function() {
-        client.assert(response.body.identifier === client.global.get("lastId"), "Wrong ID");
-        client.assert(response.body.name === "Sample Todo", "Wrong name");
-        client.assert(response.body.todos.length === 0, "Wrong todos");
-        client.assert(response.body.createdBy === "user1", "Wrong create");
-        client.assert(response.body.updatedBy === null, "Wrong updated");
-    });
-    console.log(response)
+    client.global.set("lastTodoId", response.body.identifier)
 %}
 
 ###
 
-GET http://localhost:8080/todo/?query=Todo&page=0
-
-> {%
-    client.test("Request executed successfully (Ok - 200)", function() {
-        client.assert(response.status === 200, "Response status is not 200");
-    });
-    client.test("Response size > 0", function() {
-        client.assert(response.body.length > 0, "Response body empty");
-    });
-    console.log(response)
-%}
-###
-
-DELETE http://localhost:8080/todo/{{lastId}}
+PUT http://localhost:8080/todo-list/{{lastId}}/todo/{{lastTodoId}}
 Authorization: user1
 
 > {%
-    client.test("Request executed successfully (No Content - 204)", function() {
-        client.assert(response.status === 204, "Response status is not 204");
+    client.test("Request executed successfully (No Content - 202)", function() {
+        client.assert(response.status === 202, "Response status is not 202");
     });
 %}

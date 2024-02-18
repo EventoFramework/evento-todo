@@ -1,14 +1,13 @@
 package com.eventoframework.demo.todo.web;
 
-import com.eventoframework.demo.todo.api.view.TodoListListItemView;
-import com.eventoframework.demo.todo.api.view.TodoListView;
+import com.eventoframework.demo.todo.api.todo.view.TodoListListItemView;
+import com.eventoframework.demo.todo.api.todo.view.TodoListView;
 import com.eventoframework.demo.todo.service.TodoInvoker;
 import com.evento.application.EventoBundle;
 import com.eventoframework.demo.todo.web.dto.CreatedResponse;
 import com.eventoframework.demo.todo.web.dto.TodoCreateRequest;
 import com.eventoframework.demo.todo.web.dto.TodoListCreateRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("/todo")
+@RequestMapping("/todo-list")
 public class TodoListController {
 
     private final TodoInvoker todoInvoker;
@@ -53,7 +52,7 @@ public class TodoListController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{identifier}/")
+    @PostMapping("/{identifier}/todo/")
     public ResponseEntity<CreatedResponse> addTodo(
             @PathVariable String identifier,
             @RequestBody TodoCreateRequest request,
@@ -61,7 +60,7 @@ public class TodoListController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedResponse(todoInvoker.addTodo(identifier, request.getContent(), user)));
     }
 
-    @DeleteMapping("/{identifier}/{todoIdentifier}")
+    @DeleteMapping("/{identifier}/todo/{todoIdentifier}")
     public ResponseEntity<Void> removeTodo(
             @PathVariable String identifier,
             @PathVariable String todoIdentifier,
@@ -70,7 +69,7 @@ public class TodoListController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{identifier}/{todoIdentifier}")
+    @PutMapping("/{identifier}/todo/{todoIdentifier}")
     public ResponseEntity<Void> checkTodo(
             @PathVariable String identifier,
             @PathVariable String todoIdentifier,

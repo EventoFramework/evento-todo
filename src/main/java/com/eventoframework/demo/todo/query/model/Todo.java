@@ -1,9 +1,7 @@
 package com.eventoframework.demo.todo.query.model;
 
-import com.eventoframework.demo.todo.api.view.TodoView;
+import com.eventoframework.demo.todo.api.todo.view.TodoView;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

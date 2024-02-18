@@ -1,4 +1,4 @@
-package com.eventoframework.demo.todo.api.view;
+package com.eventoframework.demo.todo.api.todo.view;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
