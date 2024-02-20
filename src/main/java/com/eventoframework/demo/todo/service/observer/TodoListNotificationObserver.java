@@ -1,4 +1,4 @@
-package com.eventoframework.demo.todo.service;
+package com.eventoframework.demo.todo.service.observer;
 
 import com.evento.common.messaging.gateway.CommandGateway;
 import com.evento.common.messaging.gateway.QueryGateway;

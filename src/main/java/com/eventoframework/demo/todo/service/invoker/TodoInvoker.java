@@ -1,4 +1,4 @@
-package com.eventoframework.demo.todo.service;
+package com.eventoframework.demo.todo.service.invoker;
 
 import com.eventoframework.demo.todo.api.todo.command.*;
 import com.eventoframework.demo.todo.api.todo.query.TodoListListItemViewSearchQuery;

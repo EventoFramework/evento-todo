@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
-    <list size="12">
+    <list size="13">
       <item index="0" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.component.Aggregate" />
       <item index="1" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.component.Projection" />
       <item index="2" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.component.Projector" />
@@ -13,7 +13,8 @@
       <item index="8" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.EventSourcingHandler" />
       <item index="9" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.InvocationHandler" />
       <item index="10" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.QueryHandler" />
-      <item index="11" class="java.lang.String" itemvalue="org.evento.common.modeling.annotations.component.Aggregate" />
+      <item index="11" class="java.lang.String" itemvalue="com.evento.common.modeling.annotations.handler.SagaEventHandler" />
+      <item index="12" class="java.lang.String" itemvalue="org.evento.common.modeling.annotations.component.Aggregate" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

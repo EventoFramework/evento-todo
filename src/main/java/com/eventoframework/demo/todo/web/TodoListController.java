@@ -2,7 +2,7 @@ package com.eventoframework.demo.todo.web;
 
 import com.eventoframework.demo.todo.api.todo.view.TodoListListItemView;
 import com.eventoframework.demo.todo.api.todo.view.TodoListView;
-import com.eventoframework.demo.todo.service.TodoInvoker;
+import com.eventoframework.demo.todo.service.invoker.TodoInvoker;
 import com.evento.application.EventoBundle;
 import com.eventoframework.demo.todo.web.dto.CreatedResponse;
 import com.eventoframework.demo.todo.web.dto.TodoCreateRequest;

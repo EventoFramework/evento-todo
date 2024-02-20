@@ -79,7 +79,7 @@ public class TodoProjector {
         list.setUpdatedAt(td.getCompletedAt());
         list.setUpdatedBy(td.getCompletedBy());
         if(list.getTodos().stream().allMatch((Todo t) -> t.getCompletedAt() != null)){
-            list.setStatus(TodoListStatus.COMPLETED);
+            list.setStatus(TodoListStatus.REGISTRATION_PENDING);
         }
         repository.save(list);
     }
