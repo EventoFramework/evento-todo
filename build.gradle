@@ -30,6 +30,7 @@ dependencies {
     implementation group: 'com.eventoframework', name: 'evento-bundle', version: 'ev1.8.0'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
 }
 
 test {
