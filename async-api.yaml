@@ -1,0 +1,43 @@
+asyncapi: '2.0.0'
+info:
+  title: Evento Todo MQTT Server
+  version: '1.0.0'
+servers:
+  production:
+    url: tcp://localhost:1883
+    description: Development server
+    protocol: mqtt
+channels:
+  /DEV/EventoTodoList/TodoList/{id}/CREATE:
+    description: Listen for creation events for a particular ID
+    subscribe:
+      message:
+        $ref: '#/components/messages/message'
+  /DEV/EventoTodoList/TodoList/{id}/UPDATE:
+    description: Listen for update events for a particular ID
+    subscribe:
+      message:
+        $ref: '#/components/messages/message'
+  /DEV/EventoTodoList/TodoList/{id}/DELETE:
+    description: Listen for creation events for a particular ID
+    subscribe:
+      message:
+        $ref: '#/components/messages/message'
+
+components:
+  messages:
+    message:
+      name: message
+      title: A message
+      summary: A message
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/message"
+  schemas:
+    message:
+      type: object
+      properties:
+        ts:
+          type: integer
+          minimum: 0
+          description: The data change timestamp.
