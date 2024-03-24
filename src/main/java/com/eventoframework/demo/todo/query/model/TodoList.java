@@ -2,6 +2,7 @@ package com.eventoframework.demo.todo.query.model;
 
 import com.eventoframework.demo.todo.api.todo.view.TodoListListItemView;
 import com.eventoframework.demo.todo.api.todo.view.TodoListView;
+import com.eventoframework.demo.todo.utils.RealtimeResource;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoList {
+public class TodoList implements RealtimeResource {
     @Id
     private String identifier;
     private String name;
@@ -46,4 +47,5 @@ public class TodoList {
     public TodoListListItemView toListItemView() {
         return new TodoListListItemView(getIdentifier(), getName());
     }
+
 }

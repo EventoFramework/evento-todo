@@ -1,5 +1,14 @@
 version: '3.3'
 services:
+  mqtt-jwt:
+    image: iegomez/mosquitto-go-auth
+    restart: always
+    ports:
+      - "1883:1883"
+      - "8883:8883"
+    volumes:
+      - ./mosquitto.conf:/etc/mosquitto/mosquitto.conf
+      - ./data/mqtt:/var/lib/mosquitto/
   evento-db:
     image: 'postgres:latest'
     restart: always

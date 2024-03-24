@@ -1,5 +1,6 @@
 package com.eventoframework.demo.todo.query;
 
+import com.evento.common.utils.ProjectorStatus;
 import com.eventoframework.demo.todo.api.erp.event.ErpUserActivityRegisteredEvent;
 import com.eventoframework.demo.todo.api.todo.event.*;
 import com.eventoframework.demo.todo.query.model.Todo;
@@ -9,6 +10,8 @@ import com.evento.common.modeling.annotations.component.Projector;
 import com.evento.common.modeling.annotations.handler.EventHandler;
 import com.evento.common.modeling.messaging.message.application.EventMessage;
 import com.eventoframework.demo.todo.query.model.TodoListStatus;
+import com.eventoframework.demo.todo.utils.RealtimeUpdateManager;
+import com.eventoframework.demo.todo.utils.RealtimeUpdatesService;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -16,17 +19,17 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
 @Projector(version = 1)
-public class TodoProjector {
+public class TodoProjector extends RealtimeUpdateManager<TodoList, String> {
 
-    private final TodoListRepository repository;
 
-    public TodoProjector(TodoListRepository repository) {
-        this.repository = repository;
+    public TodoProjector(TodoListRepository repository, RealtimeUpdatesService realtimeUpdatesService) {
+        super(repository, realtimeUpdatesService);
     }
 
     @EventHandler
-    public void on(TodoListCreatedEvent event, EventMessage<TodoListCreatedEvent> message) {
-        repository.save(new TodoList(
+    public void on(TodoListCreatedEvent event, EventMessage<TodoListCreatedEvent> message,
+                   ProjectorStatus projectorStatus) {
+        save(new TodoList(
                 event.getIdentifier(),
                 event.getContent(),
                 message.getMetadata().get("user"),
@@ -36,16 +39,18 @@ public class TodoProjector {
                 new ArrayList<>(),
                 null,
                 TodoListStatus.WIP
-        ));
+        ), projectorStatus);
     }
 
     @EventHandler
-    public void on(TodoListDeletedEvent event, EventMessage<TodoListCreatedEvent> message) {
-        repository.deleteById(event.getIdentifier());
+    public void on(TodoListDeletedEvent event, EventMessage<TodoListCreatedEvent> message,
+                   ProjectorStatus projectorStatus) {
+        delete(repository.findById(event.getIdentifier()).orElseThrow(), projectorStatus);
     }
 
     @EventHandler
-    public void on(TodoListTodoAddedEvent event, EventMessage<TodoListCreatedEvent> message) {
+    public void on(TodoListTodoAddedEvent event, EventMessage<TodoListCreatedEvent> message,
+                   ProjectorStatus projectorStatus) {
         var list = repository.findById(event.getIdentifier()).orElseThrow();
         var td = new Todo(
                 event.getTodoIdentifier(),
@@ -58,20 +63,22 @@ public class TodoProjector {
         list.getTodos().add(td);
         list.setUpdatedAt(td.getCreatedAt());
         list.setUpdatedBy(td.getCreatedBy());
-        repository.save(list);
+        update(list, projectorStatus);
     }
 
     @EventHandler
-    public void on(TodoListTodoRemovedEvent event, EventMessage<TodoListCreatedEvent> message) {
+    public void on(TodoListTodoRemovedEvent event, EventMessage<TodoListCreatedEvent> message,
+                   ProjectorStatus projectorStatus) {
         var list = repository.findById(event.getIdentifier()).orElseThrow();
         list.getTodos().removeIf(t -> event.getTodoIdentifier().equals(t.getIdentifier()));
         list.setUpdatedAt(ZonedDateTime.now());
         list.setUpdatedBy(message.getMetadata().get("user"));
-        repository.save(list);
+        update(list, projectorStatus);
     }
 
     @EventHandler
-    public void on(TodoListTodoCheckedEvent event, EventMessage<TodoListCreatedEvent> message) {
+    public void on(TodoListTodoCheckedEvent event, EventMessage<TodoListCreatedEvent> message,
+                   ProjectorStatus projectorStatus) {
         var list = repository.findById(event.getIdentifier()).orElseThrow();
         var td = list.getTodos().stream().filter(t -> event.getTodoIdentifier().equals(t.getIdentifier())).findFirst().orElseThrow();
         td.setCompletedAt(ZonedDateTime.now());
@@ -81,16 +88,17 @@ public class TodoProjector {
         if(list.getTodos().stream().allMatch((Todo t) -> t.getCompletedAt() != null)){
             list.setStatus(TodoListStatus.REGISTRATION_PENDING);
         }
-        repository.save(list);
+        update(list, projectorStatus);
     }
 
     @EventHandler
-    public void on(ErpUserActivityRegisteredEvent event){
+    public void on(ErpUserActivityRegisteredEvent event,
+                   ProjectorStatus projectorStatus){
         if("TodoList".equals(event.getResourceType())){
             var list = repository.findById(event.getResourceIdentifier()).orElseThrow();
             list.setRegisteredAt(ZonedDateTime.now());
             list.setStatus(TodoListStatus.REGISTERED);
-            repository.save(list);
+            update(list, projectorStatus);
         }
     }
 }
