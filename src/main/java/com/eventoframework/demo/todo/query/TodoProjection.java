@@ -28,7 +28,7 @@ public class TodoProjection {
 
     @QueryHandler
     public Multiple<TodoListListItemView> handle(TodoListListItemViewSearchQuery query){
-        return Multiple.of(repository.search("%" + query.getQuery() + "%", PageRequest.of(query.getPage(), query.getSize()))
+        return Multiple.of(repository.search("%" + query.getNameLike() + "%", PageRequest.of(query.getPage(), query.getSize()))
                 .map(TodoList::toListItemView).toList());
     }
 }

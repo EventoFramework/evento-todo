@@ -19,7 +19,6 @@ public class ErpTodoListActivityRegistrationSaga {
     public ErpTodoListActivityRegistrationSagaState on(TodoListCreatedEvent event){
         var state = new ErpTodoListActivityRegistrationSagaState();
         state.setTodoIdentifier(event.getIdentifier());
-        state.setToCheckCounter(0);
         state.setUsages(new HashMap<>());
         state.setAssociation("identifier", event.getIdentifier());
         return state;
@@ -34,7 +33,6 @@ public class ErpTodoListActivityRegistrationSaga {
     public void on(TodoListTodoAddedEvent event,
                    ErpTodoListActivityRegistrationSagaState state,
                    Metadata metadata){
-        state.setToCheckCounter(state.getToCheckCounter() + 1);
         var user = metadata.get("user");
         state.getUsages().put(user, state.getUsages().getOrDefault(user, 0) + 1);
     }
@@ -42,7 +40,6 @@ public class ErpTodoListActivityRegistrationSaga {
     @SagaEventHandler(associationProperty = "identifier")
     public void on(TodoListTodoRemovedEvent event, ErpTodoListActivityRegistrationSagaState state,
                    Metadata metadata){
-        state.setToCheckCounter(state.getToCheckCounter() - 1);
         var user = metadata.get("user");
         state.getUsages().put(user, state.getUsages().getOrDefault(user, 0) + 1);
     }
@@ -54,8 +51,7 @@ public class ErpTodoListActivityRegistrationSaga {
                    CommandGateway commandGateway){
         var user = metadata.get("user");
         state.getUsages().put(user, state.getUsages().getOrDefault(user, 0) + 1);
-        state.setToCheckCounter(state.getToCheckCounter() - 1);
-        if(state.getToCheckCounter() == 0){
+        if(event.isAllChecked()){
             state.setAssociation("resourceIdentifier", event.getIdentifier());
             commandGateway.send(new ErpUserActivityRegisterCommand(
                     "TodoList",

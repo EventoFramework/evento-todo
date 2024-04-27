@@ -65,8 +65,8 @@ public class TodoInvoker extends InvokerWrapper {
     }
 
     @InvocationHandler
-    public CompletableFuture<Collection<TodoListListItemView>> searchTodoList(String query, int page){
-        return getQueryGateway().query(new TodoListListItemViewSearchQuery(query, page, 15))
+    public CompletableFuture<Collection<TodoListListItemView>> searchTodoList(String nameLike, int page){
+        return getQueryGateway().query(new TodoListListItemViewSearchQuery(nameLike, page, 15))
                 .thenApply(Multiple::getData);
     }
 

@@ -26,9 +26,9 @@ public class TodoListController {
 
     @GetMapping("/")
     public CompletableFuture<ResponseEntity<Collection<TodoListListItemView>>> searchTodoList(
-           @RequestParam(defaultValue = "") String query, @RequestParam(defaultValue = "0") int page
+           @RequestParam(defaultValue = "") String nameLike, @RequestParam(defaultValue = "0") int page
     ) {
-        return todoInvoker.searchTodoList(query, page).thenApply(ResponseEntity::ok);
+        return todoInvoker.searchTodoList(nameLike, page).thenApply(ResponseEntity::ok);
     }
 
     @GetMapping("/{identifier}")

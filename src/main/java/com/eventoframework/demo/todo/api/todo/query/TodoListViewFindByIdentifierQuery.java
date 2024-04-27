@@ -13,6 +13,7 @@ import com.evento.common.modeling.messaging.query.Single;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoListViewFindByIdentifierQuery implements Query<Single<TodoListView>> {
+public class TodoListViewFindByIdentifierQuery
+        implements Query<Single<TodoListView>> {
     private String identifier;
 }

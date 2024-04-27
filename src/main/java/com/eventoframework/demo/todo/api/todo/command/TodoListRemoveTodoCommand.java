@@ -14,7 +14,9 @@ import lombok.Setter;
 @Setter
 public class TodoListRemoveTodoCommand implements DomainCommand {
 
+    // Identifier of the TodoList to update
     private String identifier;
+    // Identifier of the To-do to remove
     private String todoIdentifier;
     @Override
     public String getAggregateId() {

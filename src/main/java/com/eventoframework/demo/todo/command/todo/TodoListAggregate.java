@@ -97,7 +97,8 @@ public class TodoListAggregate {
         // Command is valid
         return new TodoListTodoCheckedEvent(
                 command.getIdentifier(),
-                command.getTodoIdentifier());
+                command.getTodoIdentifier(),
+                state.getTodos().values().stream().allMatch(b -> b));
     }
 
     @EventSourcingHandler

@@ -16,4 +16,6 @@ public class TodoListTodoCheckedEvent extends DomainEvent {
 
     private String identifier;
     private String todoIdentifier;
+    // Communicate if all Todos inside this TodoList are checked with this check
+    private boolean allChecked;
 }

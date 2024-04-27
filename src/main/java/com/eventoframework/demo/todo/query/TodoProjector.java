@@ -85,7 +85,7 @@ public class TodoProjector extends RealtimeUpdateManager<TodoList, String> {
         td.setCompletedBy(message.getMetadata().get("user"));
         list.setUpdatedAt(td.getCompletedAt());
         list.setUpdatedBy(td.getCompletedBy());
-        if(list.getTodos().stream().allMatch((Todo t) -> t.getCompletedAt() != null)){
+        if(event.isAllChecked()){
             list.setStatus(TodoListStatus.REGISTRATION_PENDING);
         }
         update(list, projectorStatus);

@@ -14,6 +14,5 @@ import java.util.HashMap;
 
 public class ErpTodoListActivityRegistrationSagaState extends SagaState {
     private String todoIdentifier;
-    private Integer toCheckCounter;
     private HashMap<String, Integer> usages;
 }
