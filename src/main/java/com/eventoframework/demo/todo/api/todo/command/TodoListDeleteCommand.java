@@ -14,6 +14,7 @@ import lombok.Setter;
 @Setter
 public class TodoListDeleteCommand  implements DomainCommand {
 
+    // Identifier of the TodoList to delete
     private String identifier;
 
     @Override

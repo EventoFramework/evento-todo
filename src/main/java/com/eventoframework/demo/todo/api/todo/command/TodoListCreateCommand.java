@@ -13,8 +13,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TodoListCreateCommand implements DomainCommand {
-    
+
+    // The TodoList Identifier
     private String identifier;
+    // The TodoList Name
     private String name;
     
     @Override

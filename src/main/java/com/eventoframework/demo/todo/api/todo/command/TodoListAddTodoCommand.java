@@ -14,8 +14,11 @@ import com.evento.common.modeling.messaging.payload.DomainCommand;
 @Setter
 public class TodoListAddTodoCommand implements DomainCommand {
 
+    // Identifier of the TodoList to update
     private String identifier;
+    // Identifier of the To-do to delete
     private String todoIdentifier;
+    // The To-do content
     private String content;
     @Override
     public String getAggregateId() {
