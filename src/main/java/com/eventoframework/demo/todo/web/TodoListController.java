@@ -2,7 +2,7 @@ package com.eventoframework.demo.todo.web;
 
 import com.eventoframework.demo.todo.api.todo.view.TodoListListItemView;
 import com.eventoframework.demo.todo.api.todo.view.TodoListView;
-import com.eventoframework.demo.todo.service.invoker.TodoInvoker;
+import com.eventoframework.demo.todo.service.invoker.TodoListInvoker;
 import com.evento.application.EventoBundle;
 import com.eventoframework.demo.todo.web.dto.CreatedResponse;
 import com.eventoframework.demo.todo.web.dto.TodoCreateRequest;
@@ -18,29 +18,29 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/todo-list")
 public class TodoListController {
 
-    private final TodoInvoker todoInvoker;
+    private final TodoListInvoker todoListInvoker;
 
     public TodoListController(EventoBundle eventoBundle) {
-        todoInvoker = eventoBundle.getInvoker(TodoInvoker.class);
+        todoListInvoker = eventoBundle.getInvoker(TodoListInvoker.class);
     }
 
     @GetMapping("/")
     public CompletableFuture<ResponseEntity<Collection<TodoListListItemView>>> searchTodoList(
            @RequestParam(defaultValue = "") String nameLike, @RequestParam(defaultValue = "0") int page
     ) {
-        return todoInvoker.searchTodoList(nameLike, page).thenApply(ResponseEntity::ok);
+        return todoListInvoker.searchTodoList(nameLike, page).thenApply(ResponseEntity::ok);
     }
 
     @GetMapping("/{identifier}")
     public CompletableFuture<ResponseEntity<TodoListView>> findTodoListByIdentifier(
             @PathVariable String identifier) {
-        return todoInvoker.findTodoListByIdentifier(identifier).thenApply(ResponseEntity::ok);
+        return todoListInvoker.findTodoListByIdentifier(identifier).thenApply(ResponseEntity::ok);
     }
 
     @PostMapping("/")
     public ResponseEntity<CreatedResponse> createTodoList(
             @RequestBody TodoListCreateRequest request, @RequestHeader(name = "Authorization") String user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedResponse(todoInvoker.createTodoList(request.getName(), user)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedResponse(todoListInvoker.createTodoList(request.getName(), user)));
     }
 
 
@@ -48,7 +48,7 @@ public class TodoListController {
     public ResponseEntity<Void> deleteTodoList(
             @PathVariable String identifier,
             @RequestHeader(name = "Authorization") String user) {
-        todoInvoker.deleteTodoList(identifier, user);
+        todoListInvoker.deleteTodoList(identifier, user);
         return ResponseEntity.noContent().build();
     }
 
@@ -57,7 +57,7 @@ public class TodoListController {
             @PathVariable String identifier,
             @RequestBody TodoCreateRequest request,
             @RequestHeader(name = "Authorization") String user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedResponse(todoInvoker.addTodo(identifier, request.getContent(), user)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedResponse(todoListInvoker.addTodo(identifier, request.getContent(), user)));
     }
 
     @DeleteMapping("/{identifier}/todo/{todoIdentifier}")
@@ -65,7 +65,7 @@ public class TodoListController {
             @PathVariable String identifier,
             @PathVariable String todoIdentifier,
             @RequestHeader(name = "Authorization") String user) {
-        todoInvoker.removeTodo(identifier, todoIdentifier, user);
+        todoListInvoker.removeTodo(identifier, todoIdentifier, user);
         return ResponseEntity.noContent().build();
     }
 
@@ -74,7 +74,7 @@ public class TodoListController {
             @PathVariable String identifier,
             @PathVariable String todoIdentifier,
             @RequestHeader(name = "Authorization") String user) {
-        todoInvoker.checkTodo(identifier, todoIdentifier, user);
+        todoListInvoker.checkTodo(identifier, todoIdentifier, user);
         return ResponseEntity.accepted().build();
     }
 }

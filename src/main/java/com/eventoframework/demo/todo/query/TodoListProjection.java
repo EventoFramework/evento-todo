@@ -13,11 +13,11 @@ import com.evento.common.modeling.messaging.query.Single;
 import org.springframework.data.domain.PageRequest;
 
 @Projection()
-public class TodoProjection {
+public class TodoListProjection {
 
     private final TodoListRepository repository;
 
-    public TodoProjection(TodoListRepository repository) {
+    public TodoListProjection(TodoListRepository repository) {
         this.repository = repository;
     }
 

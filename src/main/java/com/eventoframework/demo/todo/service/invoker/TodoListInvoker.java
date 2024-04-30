@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Invoker
-public class TodoInvoker extends InvokerWrapper {
+public class TodoListInvoker extends InvokerWrapper {
 
     @SneakyThrows
     @InvocationHandler

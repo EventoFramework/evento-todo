@@ -19,10 +19,10 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
 @Projector(version = 1)
-public class TodoProjector extends RealtimeUpdateManager<TodoList, String> {
+public class TodoListProjector extends RealtimeUpdateManager<TodoList, String> {
 
 
-    public TodoProjector(TodoListRepository repository, RealtimeUpdatesService realtimeUpdatesService) {
+    public TodoListProjector(TodoListRepository repository, RealtimeUpdatesService realtimeUpdatesService) {
         super(repository, realtimeUpdatesService);
     }
 
