@@ -22,13 +22,17 @@ public class TodoListProjection {
     }
 
     @QueryHandler
-    public Single<TodoListView> handle(TodoListViewFindByIdentifierQuery query){
-        return Single.of(repository.findById(query.getIdentifier()).map(TodoList::toView).orElseThrow());
+    public Single<TodoListView> handle(TodoListViewFindByIdentifierQuery query) {
+        return Single.of(repository.findById(query.getIdentifier())
+                .map(TodoList::toView).orElseThrow());
     }
 
     @QueryHandler
-    public Multiple<TodoListListItemView> handle(TodoListListItemViewSearchQuery query){
-        return Multiple.of(repository.search("%" + query.getNameLike() + "%", PageRequest.of(query.getPage(), query.getSize()))
+    public Multiple<TodoListListItemView> handle(TodoListListItemViewSearchQuery query) {
+        return Multiple.of(repository.search(
+                        "%" + query.getNameLike() + "%",
+                        PageRequest.of(query.getPage(),
+                                query.getSize()))
                 .map(TodoList::toListItemView).toList());
     }
 }
