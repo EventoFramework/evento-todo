@@ -105,9 +105,4 @@ public class TodoListAggregate {
     public void on(TodoListTodoCheckedEvent event, TodoListAggregateState state){
         state.getTodos().put(event.getTodoIdentifier(), true);
     }
-
-
-
-
-
 }
