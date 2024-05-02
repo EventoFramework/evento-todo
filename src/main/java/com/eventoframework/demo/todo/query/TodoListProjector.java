@@ -16,7 +16,6 @@ import com.eventoframework.demo.todo.utils.RealtimeUpdatesService;
 
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
 @Projector(version = 1)
