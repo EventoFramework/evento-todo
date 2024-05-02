@@ -1,5 +1,6 @@
 package com.eventoframework.demo.todo.query;
 
+import com.evento.common.modeling.messaging.message.application.Metadata;
 import com.evento.common.utils.ProjectorStatus;
 import com.eventoframework.demo.todo.api.erp.event.ErpUserActivityRegisteredEvent;
 import com.eventoframework.demo.todo.api.todo.event.*;
@@ -49,15 +50,15 @@ public class TodoListProjector extends RealtimeUpdateManager<TodoList, String> {
     }
 
     @EventHandler
-    public void on(TodoListTodoAddedEvent event, EventMessage<TodoListCreatedEvent> message,
+    public void on(TodoListTodoAddedEvent event, Metadata metadata, Instant timestamp,
                    ProjectorStatus projectorStatus) {
         var list = repository.findById(event.getIdentifier()).orElseThrow();
         var td = new Todo(
                 event.getTodoIdentifier(),
                 event.getContent(),
-                message.getMetadata().get("user"),
+                metadata.get("user"),
                 null,
-                ZonedDateTime.now(),
+                timestamp.atZone(ZoneId.systemDefault()),
                 null
         );
         list.getTodos().add(td);
@@ -67,22 +68,22 @@ public class TodoListProjector extends RealtimeUpdateManager<TodoList, String> {
     }
 
     @EventHandler
-    public void on(TodoListTodoRemovedEvent event, EventMessage<TodoListCreatedEvent> message,
+    public void on(TodoListTodoRemovedEvent event, Metadata metadata, Instant timestamp,
                    ProjectorStatus projectorStatus) {
         var list = repository.findById(event.getIdentifier()).orElseThrow();
         list.getTodos().removeIf(t -> event.getTodoIdentifier().equals(t.getIdentifier()));
-        list.setUpdatedAt(ZonedDateTime.now());
-        list.setUpdatedBy(message.getMetadata().get("user"));
+        list.setUpdatedAt(timestamp.atZone(ZoneId.systemDefault()));
+        list.setUpdatedBy(metadata.get("user"));
         update(list, projectorStatus);
     }
 
     @EventHandler
-    public void on(TodoListTodoCheckedEvent event, EventMessage<TodoListCreatedEvent> message,
+    public void on(TodoListTodoCheckedEvent event, Metadata metadata, Instant timestamp,
                    ProjectorStatus projectorStatus) {
         var list = repository.findById(event.getIdentifier()).orElseThrow();
         var td = list.getTodos().stream().filter(t -> event.getTodoIdentifier().equals(t.getIdentifier())).findFirst().orElseThrow();
-        td.setCompletedAt(ZonedDateTime.now());
-        td.setCompletedBy(message.getMetadata().get("user"));
+        td.setCompletedAt(timestamp.atZone(ZoneId.systemDefault()));
+        td.setCompletedBy(metadata.get("user"));
         list.setUpdatedAt(td.getCompletedAt());
         list.setUpdatedBy(td.getCompletedBy());
         if(event.isAllChecked()){
@@ -93,10 +94,11 @@ public class TodoListProjector extends RealtimeUpdateManager<TodoList, String> {
 
     @EventHandler
     public void on(ErpUserActivityRegisteredEvent event,
+                   Instant timestamp,
                    ProjectorStatus projectorStatus){
         if("TodoList".equals(event.getResourceType())){
             var list = repository.findById(event.getResourceIdentifier()).orElseThrow();
-            list.setRegisteredAt(ZonedDateTime.now());
+            list.setRegisteredAt(timestamp.atZone(ZoneId.systemDefault()));
             list.setStatus(TodoListStatus.REGISTERED);
             update(list, projectorStatus);
         }
