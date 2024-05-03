@@ -21,6 +21,7 @@ public class TodoListController {
     private final TodoListInvoker todoListInvoker;
 
     public TodoListController(EventoBundle eventoBundle) {
+        // Instantiate the invoker
         todoListInvoker = eventoBundle.getInvoker(TodoListInvoker.class);
     }
 
@@ -28,19 +29,27 @@ public class TodoListController {
     public CompletableFuture<ResponseEntity<Collection<TodoListListItemView>>> searchTodoList(
            @RequestParam(defaultValue = "") String nameLike, @RequestParam(defaultValue = "0") int page
     ) {
-        return todoListInvoker.searchTodoList(nameLike, page).thenApply(ResponseEntity::ok);
+        return todoListInvoker
+                .searchTodoList(nameLike, page)
+                .thenApply(ResponseEntity::ok);
     }
 
     @GetMapping("/{identifier}")
     public CompletableFuture<ResponseEntity<TodoListView>> findTodoListByIdentifier(
             @PathVariable String identifier) {
-        return todoListInvoker.findTodoListByIdentifier(identifier).thenApply(ResponseEntity::ok);
+        return todoListInvoker
+                .findTodoListByIdentifier(identifier)
+                .thenApply(ResponseEntity::ok);
     }
 
     @PostMapping("/")
     public ResponseEntity<CreatedResponse> createTodoList(
             @RequestBody TodoListCreateRequest request, @RequestHeader(name = "Authorization") String user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedResponse(todoListInvoker.createTodoList(request.getName(), user)));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new CreatedResponse(
+                        todoListInvoker.createTodoList(request.getName(), user)
+                ));
     }
 
 
@@ -57,7 +66,10 @@ public class TodoListController {
             @PathVariable String identifier,
             @RequestBody TodoCreateRequest request,
             @RequestHeader(name = "Authorization") String user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedResponse(todoListInvoker.addTodo(identifier, request.getContent(), user)));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new CreatedResponse(
+                        todoListInvoker.addTodo(identifier, request.getContent(), user)
+                ));
     }
 
     @DeleteMapping("/{identifier}/todo/{todoIdentifier}")
