@@ -1,5 +1,6 @@
 package com.eventoframework.demo.todo.config;
 
+import com.evento.common.messaging.consumer.impl.InMemoryConsumerStateStore;
 import com.eventoframework.demo.todo.TodoApplication;
 import com.evento.application.EventoBundle;
 import com.evento.application.bus.ClusterNodeAddress;
@@ -41,6 +42,8 @@ public class EventoConfig {
                         return super.correlate(metadata, handledMessage);
                     }})
                 .setInjector(factory::getBean)
+                .setConsumerStateStoreBuilder(InMemoryConsumerStateStore::new)
+                .setSssFetchDelay(100)
                 .start();
         evento.getPerformanceService().setPerformanceRate(1);
         return evento;
