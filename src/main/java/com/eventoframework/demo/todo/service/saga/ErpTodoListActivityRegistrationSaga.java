@@ -8,7 +8,6 @@ import com.eventoframework.demo.todo.api.erp.command.ErpUserActivityRegisterComm
 import com.eventoframework.demo.todo.api.erp.event.ErpUserActivityRegisteredEvent;
 import com.eventoframework.demo.todo.api.todo.command.TodoListAddTodoCommand;
 import com.eventoframework.demo.todo.api.todo.event.*;
-import org.springframework.data.jpa.repository.Meta;
 
 import java.util.HashMap;
 
@@ -48,16 +47,17 @@ public class ErpTodoListActivityRegistrationSaga {
     public void on(TodoListTodoCheckedEvent event,
                    ErpTodoListActivityRegistrationSagaState state,
                    Metadata metadata,
-                   CommandGateway commandGateway){
+                   CommandGateway commandGateway) throws Exception {
         var user = metadata.get("user");
         state.getUsages().put(user, state.getUsages().getOrDefault(user, 0) + 1);
         if(event.isAllChecked()){
             state.setAssociation("resourceIdentifier", event.getIdentifier());
+            // Await the command so a failed registration retries this handler
             commandGateway.send(new ErpUserActivityRegisterCommand(
                     "TodoList",
                     event.getIdentifier(),
                     state.getUsages()
-            ));
+            )).get();
         }
     }
 

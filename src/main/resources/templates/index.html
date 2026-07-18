@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Evento Todo — a live RECQ demo</title>
+    <link rel="stylesheet" href="/css/evento.css">
+</head>
+<body>
+<header class="site">
+    <img src="/img/logo-white.png" alt="Evento"
+         onerror="this.style.display='none'">
+    <strong>Todo — live RECQ demo</strong>
+    <span class="spacer"></span>
+    <span class="user-chip" th:if="${user}" th:text="${user}">guest</span>
+    <a href="https://www.eventoframework.com/demo/">About this demo</a>
+    <a href="https://github.com/EventoFramework/evento-todo">Source</a>
+</header>
+<main>
+    <div class="error" th:if="${error}" th:text="${error}">error</div>
+
+    <!-- First visit: pick a display name (becomes message Metadata "user") -->
+    <div class="card" th:if="${user == null}">
+        <h2>Who are you?</h2>
+        <p class="muted">
+            Your name travels as <code>Metadata</code> on every Command you send — watch it flow
+            through the system in the <a href="https://www.eventoframework.com/demo/">Evento GUI</a>.
+        </p>
+        <form method="post" action="/user" class="row">
+            <input class="grow" type="text" name="name" placeholder="e.g. Ada" required maxlength="40">
+            <button type="submit">Start</button>
+        </form>
+    </div>
+
+    <th:block th:if="${user != null}">
+        <div class="card">
+            <h2>Create a todo list</h2>
+            <p class="muted">
+                Submitting this form sends a <code>TodoListCreateCommand</code> to the
+                <code>TodoListAggregate</code>, which validates it and emits a
+                <code>TodoListCreatedEvent</code> into the event store.
+            </p>
+            <form method="post" action="/todo-list" class="row">
+                <input class="grow" type="text" name="name" placeholder="List name" required maxlength="80">
+                <button type="submit">Create</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="row">
+                <h2 class="grow"><span class="live-dot"></span>Todo lists</h2>
+                <form method="get" action="/" class="row">
+                    <input type="text" name="nameLike" placeholder="Search…" th:value="${nameLike}">
+                    <button type="submit" class="ghost">Search</button>
+                </form>
+            </div>
+            <p class="muted">
+                This list is served by <code>TodoListProjection</code> from a read model kept
+                up-to-date by <code>TodoListProjector</code> — updates stream in live over SSE.
+            </p>
+            <div class="todo" th:each="list : ${lists}">
+                <a class="content" th:href="@{'/todo-list/' + ${list.identifier}}"
+                   th:text="${list.name}">List name</a>
+            </div>
+            <p class="muted" th:if="${#lists.isEmpty(lists)}">No lists yet — create the first one.</p>
+        </div>
+    </th:block>
+
+    <div class="src-links">
+        Components behind this page:
+        <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/service/invoker/TodoListInvoker.java">@Invoker</a>
+        <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/command/todo/TodoListAggregate.java">@Aggregate</a>
+        <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/query/TodoListProjector.java">@Projector</a>
+        <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/query/TodoListProjection.java">@Projection</a>
+    </div>
+</main>
+<footer class="site">
+    A demo of the <a href="https://www.eventoframework.com/">Evento Framework</a> —
+    every action is a Command, every change an Event, every screen a Query.
+    Data resets nightly.
+</footer>
+<script>
+    // Live refresh: the Projector notifies this page whenever any list changes.
+    new EventSource('/sse/todo-lists').onmessage = () => location.reload();
+</script>
+</body>
+</html>

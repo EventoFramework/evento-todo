@@ -94,11 +94,15 @@ public class TodoListAggregate {
                 "Error: Todo not present");
         Assert.isTrue(!state.getTodos().get(command.getTodoIdentifier()),
                 "Error: Todo already checked");
-        // Command is valid
+        // Command is valid. This check completes the list when every OTHER
+        // todo is already done (the one being checked is still false here —
+        // its EventSourcingHandler runs after the event is stored).
         return new TodoListTodoCheckedEvent(
                 command.getIdentifier(),
                 command.getTodoIdentifier(),
-                state.getTodos().values().stream().allMatch(b -> b));
+                state.getTodos().entrySet().stream()
+                        .filter(e -> !e.getKey().equals(command.getTodoIdentifier()))
+                        .allMatch(java.util.Map.Entry::getValue));
     }
 
     @EventSourcingHandler

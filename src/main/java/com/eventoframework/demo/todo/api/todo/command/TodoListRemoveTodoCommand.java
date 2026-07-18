@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoListRemoveTodoCommand implements DomainCommand {
+public class TodoListRemoveTodoCommand extends DomainCommand {
 
     // Identifier of the TodoList to update
     private String identifier;

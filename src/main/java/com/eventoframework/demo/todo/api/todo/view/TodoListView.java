@@ -23,4 +23,6 @@ public class TodoListView implements View {
     private String updatedBy;
     private ZonedDateTime createdAt;
     private ZonedDateTime updatedAt;
+    // Lifecycle: WIP -> REGISTRATION_PENDING -> REGISTERED
+    private String status;
 }

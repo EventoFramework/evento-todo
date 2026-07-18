@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoListCreateCommand implements DomainCommand {
+public class TodoListCreateCommand extends DomainCommand {
 
     // The TodoList Identifier
     private String identifier;
