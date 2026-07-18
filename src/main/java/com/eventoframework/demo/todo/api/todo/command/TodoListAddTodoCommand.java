@@ -12,7 +12,7 @@ import com.evento.common.modeling.messaging.payload.DomainCommand;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TodoListAddTodoCommand implements DomainCommand {
+public class TodoListAddTodoCommand extends DomainCommand {
 
     // Identifier of the TodoList to update
     private String identifier;

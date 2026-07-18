@@ -12,7 +12,7 @@ import java.util.HashMap;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErpUserActivityRegisterCommand implements ServiceCommand {
+public class ErpUserActivityRegisterCommand extends ServiceCommand {
 
     private String resourceType;
     private String resourceIdentifier;

@@ -15,7 +15,7 @@ import com.evento.common.modeling.messaging.query.Multiple;
 @Getter
 @Setter
 public class TodoListListItemViewSearchQuery
-        implements Query<Multiple<TodoListListItemView>> {
+        extends Query<Multiple<TodoListListItemView>> {
     // A like filter for the TodoList name
     private String nameLike;
     // Pagination infos

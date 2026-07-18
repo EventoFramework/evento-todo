@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotificationSendCommand implements ServiceCommand {
+public class NotificationSendCommand extends ServiceCommand {
     private String body;
 }

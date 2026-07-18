@@ -14,6 +14,6 @@ import com.evento.common.modeling.messaging.query.Single;
 @Getter
 @Setter
 public class TodoListViewFindByIdentifierQuery
-        implements Query<Single<TodoListView>> {
+        extends Query<Single<TodoListView>> {
     private String identifier;
 }

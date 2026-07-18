@@ -1,2 +1,6 @@
-rootProject.name = 'evento-todo'
+plugins {
+    // Auto-provisions the Java 25 toolchain when the local JDK is older
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
 
+rootProject.name = 'evento-todo'

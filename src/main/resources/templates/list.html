@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${list.name} + ' — Evento Todo'">Todo list</title>
+    <link rel="stylesheet" href="/css/evento.css">
+</head>
+<body>
+<header class="site">
+    <img src="/img/logo-white.png" alt="Evento"
+         onerror="this.style.display='none'">
+    <strong>Todo — live RECQ demo</strong>
+    <span class="spacer"></span>
+    <span class="user-chip" th:text="${user}">guest</span>
+    <a href="/">All lists</a>
+    <a href="https://github.com/EventoFramework/evento-todo">Source</a>
+</header>
+<main>
+    <div class="error" th:if="${error}" th:text="${error}">error</div>
+
+    <div class="card">
+        <div class="row">
+            <h1 class="grow" th:text="${list.name}">List</h1>
+            <span class="badge wip" th:if="${list.status?.name() == 'WIP'}">in progress</span>
+            <span class="badge pending" th:if="${list.status?.name() == 'REGISTRATION_PENDING'}">registering…</span>
+            <span class="badge registered" th:if="${list.status?.name() == 'REGISTERED'}">registered ✓</span>
+        </div>
+        <p class="muted">
+            Created by <span th:text="${list.createdBy ?: '?'}">?</span>
+            <th:block th:if="${list.updatedBy}">
+                · last update by <span th:text="${list.updatedBy}">?</span>
+            </th:block>
+        </p>
+
+        <div class="todo" th:each="todo : ${list.todos}" th:classappend="${todo.completed} ? 'done'">
+            <form th:unless="${todo.completed}" method="post"
+                  th:action="@{'/todo-list/' + ${list.identifier} + '/todo/' + ${todo.identifier} + '/check'}">
+                <button type="submit" class="ghost" title="Check">✓</button>
+            </form>
+            <span th:if="${todo.completed}" title="Done">✅</span>
+            <span class="content">
+                <span th:text="${todo.content}">content</span>
+                <small class="muted" th:if="${todo.completed}"
+                       th:text="'checked by ' + ${todo.completedBy}">by</small>
+            </span>
+            <form th:unless="${todo.completed}" method="post"
+                  th:action="@{'/todo-list/' + ${list.identifier} + '/todo/' + ${todo.identifier} + '/remove'}">
+                <button type="submit" class="danger" title="Remove">✕</button>
+            </form>
+        </div>
+
+        <p class="muted" th:if="${#lists.isEmpty(list.todos)}">Empty list — add the first todo.</p>
+
+        <form method="post" th:action="@{'/todo-list/' + ${list.identifier} + '/todo'}" class="row"
+              style="margin-top:1rem">
+            <input class="grow" type="text" name="content" placeholder="New todo (max 5 per list)"
+                   required maxlength="120">
+            <button type="submit">Add</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>What just happened?</h2>
+        <p class="muted">
+            Checking a todo sends <code>TodoListCheckTodoCommand</code> → the
+            <code>TodoListAggregate</code> emits <code>TodoListTodoCheckedEvent</code> → the
+            <code>TodoListProjector</code> updates this page (live, via SSE), the
+            <code>TodoListNotificationObserver</code> sends a notification, and when the last todo
+            is checked the <code>ErpTodoListActivityRegistrationSaga</code> registers everyone's
+            contributions through the <code>ErpService</code>. Watch the flow in the
+            <a href="https://www.eventoframework.com/demo/">Evento GUI</a>.
+        </p>
+        <div class="src-links">
+            <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/command/todo/TodoListAggregate.java">@Aggregate</a>
+            <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/query/TodoListProjector.java">@Projector</a>
+            <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/service/saga/ErpTodoListActivityRegistrationSaga.java">@Saga</a>
+            <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/service/observer/TodoListNotificationObserver.java">@Observer</a>
+            <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/command/erp/ErpService.java">@Service</a>
+        </div>
+    </div>
+
+    <form method="post" th:action="@{'/todo-list/' + ${list.identifier} + '/delete'}">
+        <button type="submit" class="danger">Delete this list</button>
+        <span class="muted">(only allowed while no todo is checked)</span>
+    </form>
+</main>
+<footer class="site">
+    A demo of the <a href="https://www.eventoframework.com/">Evento Framework</a>. Data resets nightly.
+</footer>
+<script th:inline="javascript">
+    // Live refresh: the Projector notifies this page when THIS list changes.
+    const listId = /*[[${list.identifier}]]*/ 'id';
+    new EventSource('/sse/todo-list/' + listId).onmessage = () => location.reload();
+</script>
+</body>
+</html>

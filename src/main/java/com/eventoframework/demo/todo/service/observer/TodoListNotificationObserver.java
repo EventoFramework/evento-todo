@@ -30,6 +30,6 @@ public class TodoListNotificationObserver {
                 DateTimeFormatter
                         .ofPattern("yyyy-MM-dd'T'hh:mm'Z'")
                         .withZone(ZoneOffset.UTC).format(Instant.ofEpochMilli(message.getTimestamp())));
-        commandGateway.send(new NotificationSendCommand(body));
+        commandGateway.send(new NotificationSendCommand(body)).get();
     }
 }

@@ -1,0 +1,43 @@
+# Local development infrastructure for evento-todo:
+# Postgres (read models + consumer state + event store) and Evento Server.
+services:
+  todo-db:
+    image: postgres:17
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=todo
+    ports:
+      - '5432:5432'
+    volumes:
+      - todo-db-data:/var/lib/postgresql/data
+
+  evento-db:
+    image: postgres:17
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=evento
+    volumes:
+      - evento-db-data:/var/lib/postgresql/data
+
+  evento-server:
+    image: eventoframework/evento-server:latest
+    restart: on-failure
+    depends_on:
+      - evento-db
+    environment:
+      - evento_cluster_name=evento-todo-local
+      - evento_performance_capture_rate=1
+      - evento_telemetry_ttl=365
+      - evento_security_signing_key=LOCAL_DEV_JWT_SEED
+      - spring_datasource_url=jdbc:postgresql://evento-db:5432/evento
+      - spring_datasource_username=postgres
+      - spring_datasource_password=secret
+    ports:
+      - '3000:3000'
+      - '3030:3030'
+
+volumes:
+  todo-db-data:
+  evento-db-data:
