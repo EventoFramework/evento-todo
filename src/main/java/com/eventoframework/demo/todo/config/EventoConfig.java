@@ -42,7 +42,7 @@ public class EventoConfig {
             @Value("${evento.server.port}") int port,
             @Value("${evento.bundle.id}") String bundleId,
             @Value("${evento.bundle.version}") long bundleVersion,
-            @Value("${evento.bundle.repository-url:https://github.com/EventoFramework/evento-todo/blob/main}") String repositoryUrl,
+            @Value("${evento.bundle.repository-url:https://github.com/EventoFramework/evento-todo/blob/main/src/main/java}") String repositoryUrl,
             DataSource dataSource,
             BeanFactory factory) throws Exception {
         // Create the evento_v2_* consumer tables on first start
