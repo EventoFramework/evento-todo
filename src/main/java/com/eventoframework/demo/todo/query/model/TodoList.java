@@ -40,7 +40,8 @@ public class TodoList {
                 getCreatedBy(),
                 getUpdatedBy(),
                 getCreatedAt(),
-                getUpdatedAt());
+                getUpdatedAt(),
+                getStatus() == null ? null : getStatus().name());
     }
 
     public TodoListListItemView toListItemView() {

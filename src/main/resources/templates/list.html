@@ -22,9 +22,9 @@
     <div class="card">
         <div class="row">
             <h1 class="grow" th:text="${list.name}">List</h1>
-            <span class="badge wip" th:if="${list.status?.name() == 'WIP'}">in progress</span>
-            <span class="badge pending" th:if="${list.status?.name() == 'REGISTRATION_PENDING'}">registering…</span>
-            <span class="badge registered" th:if="${list.status?.name() == 'REGISTERED'}">registered ✓</span>
+            <span class="badge wip" th:if="${list.status == 'WIP'}">in progress</span>
+            <span class="badge pending" th:if="${list.status == 'REGISTRATION_PENDING'}">registering…</span>
+            <span class="badge registered" th:if="${list.status == 'REGISTERED'}">registered ✓</span>
         </div>
         <p class="muted">
             Created by <span th:text="${list.createdBy ?: '?'}">?</span>
