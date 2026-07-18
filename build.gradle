@@ -29,8 +29,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'org.postgresql:postgresql'
 
-    implementation group: 'com.eventoframework', name: 'evento-bundle', version: '2.2.2'
-    implementation group: 'com.eventoframework.evento-consumer-state-store', name: 'evento-consumer-state-store-jdbc', version: '2.2.2'
+    implementation group: 'com.eventoframework', name: 'evento-bundle', version: '2.3.0'
+    implementation group: 'com.eventoframework.evento-consumer-state-store', name: 'evento-consumer-state-store-jdbc', version: '2.3.0'
     runtimeOnly 'org.flywaydb:flyway-core'
     runtimeOnly 'org.flywaydb:flyway-database-postgresql'
 
