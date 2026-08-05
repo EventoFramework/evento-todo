@@ -17,11 +17,6 @@ repositories {
     mavenCentral()
 }
 
-// Spring Boot's BOM manages Netty down to 4.1, but evento-transport-netty 2.4.4
-// uses Netty 4.2-only APIs (MultiThreadIoEventLoopGroup) — without this pin the
-// bundle dies at startup with NoClassDefFoundError. Keep in sync with the
-// nettyVersion used by the framework.
-ext['netty.version'] = '4.2.16.Final'
 
 configurations {
     compileOnly {
@@ -35,8 +30,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'org.postgresql:postgresql'
 
-    implementation group: 'com.eventoframework', name: 'evento-bundle', version: '2.4.4'
-    implementation group: 'com.eventoframework.evento-consumer-state-store', name: 'evento-consumer-state-store-jdbc', version: '2.4.4'
+    implementation group: 'com.eventoframework', name: 'evento-bundle', version: '2.4.5'
+    implementation group: 'com.eventoframework.evento-consumer-state-store', name: 'evento-consumer-state-store-jdbc', version: '2.4.5'
     runtimeOnly 'org.flywaydb:flyway-core'
     runtimeOnly 'org.flywaydb:flyway-database-postgresql'
 

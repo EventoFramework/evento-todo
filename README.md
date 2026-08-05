@@ -19,7 +19,7 @@ Every RECQ component type appears exactly once, each in one plain Java class:
 ## Stack
 
 - Java 25, Spring Boot 3.5 (LTS), Thymeleaf server-rendered UI (no JS build)
-- [`evento-bundle`](https://central.sonatype.com/artifact/com.eventoframework/evento-bundle) 2.4.4
+- [`evento-bundle`](https://central.sonatype.com/artifact/com.eventoframework/evento-bundle) 2.4.5
   connected to an [Evento Server](https://hub.docker.com/r/eventoframework/evento-server)
 - Postgres for both the read model and the Evento consumer state
   (`evento_v2_*` tables, migrated automatically at startup)
