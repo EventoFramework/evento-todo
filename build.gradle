@@ -17,6 +17,12 @@ repositories {
     mavenCentral()
 }
 
+// Spring Boot's BOM manages Netty down to 4.1, but evento-transport-netty 2.4.4
+// uses Netty 4.2-only APIs (MultiThreadIoEventLoopGroup) — without this pin the
+// bundle dies at startup with NoClassDefFoundError. Keep in sync with the
+// nettyVersion used by the framework.
+ext['netty.version'] = '4.2.16.Final'
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
