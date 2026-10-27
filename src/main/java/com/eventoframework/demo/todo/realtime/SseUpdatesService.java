@@ -35,6 +35,12 @@ public class SseUpdatesService {
         if (listeners != null) broadcast(listeners, listId);
     }
 
+    /** Something every page may show changed (a user's display name): refresh them all. */
+    public void notifyEverything() {
+        broadcast(globalListeners, "*");
+        listListeners.forEach((id, listeners) -> broadcast(listeners, id));
+    }
+
     private SseEmitter register(Set<SseEmitter> target) {
         var emitter = new SseEmitter(TIMEOUT_MS);
         target.add(emitter);

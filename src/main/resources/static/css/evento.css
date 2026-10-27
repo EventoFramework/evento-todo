@@ -135,3 +135,9 @@ footer.site a { color: var(--accent); text-decoration: none; }
   animation: pulse 2s infinite;
 }
 @keyframes pulse { 50% { opacity: 0.3; } }
+
+.notice { border-left: 4px solid var(--success); }
+.pager { margin-top: 1rem; }
+ul.features { margin: 0; padding-left: 1.2rem; }
+ul.features li { margin: 0.35rem 0; }
+a.btn { text-decoration: none; display: inline-block; }

@@ -22,7 +22,7 @@ services:
       - evento-db-data:/var/lib/postgresql/data
 
   evento-server:
-    image: eventoframework/evento-server:latest
+    image: eventoframework/evento-server:3.0.0
     restart: on-failure
     depends_on:
       - evento-db
@@ -30,7 +30,9 @@ services:
       - evento_cluster_name=evento-todo-local
       - evento_performance_capture_rate=1
       - evento_telemetry_ttl=365
-      - evento_security_signing_key=LOCAL_DEV_JWT_SEED
+      # Local development only: the prod profile (the default) refuses to start without a bus
+      # token, TLS, a payload allowlist and non-default passwords (see the live demo's compose).
+      - EVENTO_SERVER_SECURITY_PROFILE=dev
       - spring_datasource_url=jdbc:postgresql://evento-db:5432/evento
       - spring_datasource_username=postgres
       - spring_datasource_password=secret

@@ -58,6 +58,14 @@
                    required maxlength="120">
             <button type="submit">Add</button>
         </form>
+
+        <form method="post" th:action="@{'/todo-list/' + ${list.identifier} + '/check-all'}" class="row"
+              style="margin-top:0.75rem"
+              th:if="${#lists.size(list.todos) > 0 and list.status == 'WIP'}">
+            <button type="submit" class="ghost">Check all</button>
+            <span class="muted">One <code>TodoListCheckAllCommand</code>, one <code>TodoListTodoCheckedEvent</code>
+                per open todo: <code>DomainEvents</code>, stored all or none (Evento 3.0).</span>
+        </form>
     </div>
 
     <div class="card">

@@ -1,86 +1,110 @@
 package com.eventoframework.demo.todo.command.todo;
 
+import com.evento.test.AggregateFixture;
 import com.eventoframework.demo.todo.api.todo.command.TodoListAddTodoCommand;
+import com.eventoframework.demo.todo.api.todo.command.TodoListCheckAllCommand;
 import com.eventoframework.demo.todo.api.todo.command.TodoListCheckTodoCommand;
 import com.eventoframework.demo.todo.api.todo.command.TodoListCreateCommand;
 import com.eventoframework.demo.todo.api.todo.command.TodoListDeleteCommand;
 import com.eventoframework.demo.todo.api.todo.event.TodoListCreatedEvent;
-import org.junit.jupiter.api.BeforeEach;
+import com.eventoframework.demo.todo.api.todo.event.TodoListDeletedEvent;
+import com.eventoframework.demo.todo.api.todo.event.TodoListTodoAddedEvent;
+import com.eventoframework.demo.todo.api.todo.event.TodoListTodoCheckedEvent;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * RECQ aggregates are plain Java: handlers are directly testable without any
- * framework infrastructure — feed commands, apply events, assert behavior.
+ * Given/when/then with the evento-test fixtures (Evento 3.0): the aggregate handlers run the
+ * way a bundle runs them, with no server, no event store and no database.
  */
 class TodoListAggregateTest {
 
-    private TodoListAggregate aggregate;
-    private TodoListAggregateState state;
+    private static final String LIST = "TDLS_1";
 
-    @BeforeEach
-    void setUp() {
-        aggregate = new TodoListAggregate();
-        var created = aggregate.handle(new TodoListCreateCommand("TDLS_1", "Groceries"));
-        state = aggregate.on(created);
+    private static TodoListCreatedEvent created() {
+        return new TodoListCreatedEvent(LIST, "Groceries");
+    }
+
+    private static TodoListTodoAddedEvent added(String todo) {
+        return new TodoListTodoAddedEvent(LIST, todo, "todo " + todo);
     }
 
     @Test
     void createEmitsEventWithNameAndId() {
-        var event = aggregate.handle(new TodoListCreateCommand("TDLS_2", "Chores"));
-        assertNotNull(event);
-        assertEquals("TDLS_2", event.getIdentifier());
-        assertEquals("Chores", event.getContent());
+        AggregateFixture.of(new TodoListAggregate())
+                .givenNoPriorActivity()
+                .when(new TodoListCreateCommand(LIST, "Groceries"))
+                .expectEvent(created());
     }
 
     @Test
     void createRequiresAName() {
-        assertThrows(IllegalArgumentException.class,
-                () -> aggregate.handle(new TodoListCreateCommand("TDLS_3", "  ")));
+        AggregateFixture.of(new TodoListAggregate())
+                .givenNoPriorActivity()
+                .when(new TodoListCreateCommand(LIST, "  "))
+                .expectException(IllegalArgumentException.class);
     }
 
     @Test
     void addTodoIsLimitedToFive() {
-        for (int i = 0; i < 5; i++) {
-            var event = aggregate.handle(
-                    new TodoListAddTodoCommand("TDLS_1", "TODO_" + i, "todo " + i), state);
-            aggregate.on(event, state);
-        }
-        assertEquals(5, state.getTodos().size());
-        assertThrows(IllegalArgumentException.class, () -> aggregate.handle(
-                new TodoListAddTodoCommand("TDLS_1", "TODO_6", "one too many"), state));
+        AggregateFixture.of(new TodoListAggregate())
+                .given(created(), added("A"), added("B"), added("C"), added("D"), added("E"))
+                .when(new TodoListAddTodoCommand(LIST, "F", "one too many"))
+                .expectException(IllegalArgumentException.class,
+                        e -> assertEquals("Error: Todo list is full", e.getMessage()));
     }
 
     @Test
     void addingTheSameTodoTwiceIsRejected() {
-        var event = aggregate.handle(new TodoListAddTodoCommand("TDLS_1", "TODO_A", "buy milk"), state);
-        aggregate.on(event, state);
-        assertThrows(IllegalArgumentException.class, () -> aggregate.handle(
-                new TodoListAddTodoCommand("TDLS_1", "TODO_A", "buy milk again"), state));
+        AggregateFixture.of(new TodoListAggregate())
+                .given(created(), added("A"))
+                .when(new TodoListAddTodoCommand(LIST, "A", "again"))
+                .expectException(IllegalArgumentException.class);
     }
 
     @Test
-    void checkingTheLastTodoFlagsAllChecked() {
-        aggregate.on(aggregate.handle(new TodoListAddTodoCommand("TDLS_1", "TODO_A", "a"), state), state);
-        aggregate.on(aggregate.handle(new TodoListAddTodoCommand("TDLS_1", "TODO_B", "b"), state), state);
-
-        var first = aggregate.handle(new TodoListCheckTodoCommand("TDLS_1", "TODO_A"), state);
-        aggregate.on(first, state);
-        assertTrue(!first.isAllChecked());
-
-        var last = aggregate.handle(new TodoListCheckTodoCommand("TDLS_1", "TODO_B"), state);
-        assertTrue(last.isAllChecked());
+    void checkingTheLastOpenTodoCompletesTheList() {
+        AggregateFixture.of(new TodoListAggregate())
+                .given(created(), added("A"), added("B"), new TodoListTodoCheckedEvent(LIST, "A", false))
+                .when(new TodoListCheckTodoCommand(LIST, "B"))
+                .expectEvent(new TodoListTodoCheckedEvent(LIST, "B", true));
     }
 
     @Test
-    void deleteIsRejectedWhenATodoIsChecked() {
-        aggregate.on(aggregate.handle(new TodoListAddTodoCommand("TDLS_1", "TODO_A", "a"), state), state);
-        aggregate.on(aggregate.handle(new TodoListCheckTodoCommand("TDLS_1", "TODO_A"), state), state);
-        assertThrows(IllegalArgumentException.class,
-                () -> aggregate.handle(new TodoListDeleteCommand("TDLS_1"), state));
+    void checkAllEmitsOneEventPerOpenTodo() {
+        // DomainEvents: several events from one command, applied in order, stored all or none
+        AggregateFixture.of(new TodoListAggregate())
+                .given(created(), added("A"), added("B"), added("C"), new TodoListTodoCheckedEvent(LIST, "B", false))
+                .when(new TodoListCheckAllCommand(LIST))
+                .expectEvents(
+                        new TodoListTodoCheckedEvent(LIST, "A", false),
+                        new TodoListTodoCheckedEvent(LIST, "C", true))
+                .expectState(TodoListAggregateState.class,
+                        s -> assertEquals(3, s.getTodos().values().stream().filter(b -> b).count()));
+    }
+
+    @Test
+    void checkAllNeedsAnOpenTodo() {
+        AggregateFixture.of(new TodoListAggregate())
+                .given(created(), added("A"), new TodoListTodoCheckedEvent(LIST, "A", true))
+                .when(new TodoListCheckAllCommand(LIST))
+                .expectException(IllegalArgumentException.class);
+    }
+
+    @Test
+    void aListWithACheckedTodoCannotBeDeleted() {
+        AggregateFixture.of(new TodoListAggregate())
+                .given(created(), added("A"), new TodoListTodoCheckedEvent(LIST, "A", true))
+                .when(new TodoListDeleteCommand(LIST))
+                .expectException(IllegalArgumentException.class);
+    }
+
+    @Test
+    void anEmptyListCanBeDeleted() {
+        AggregateFixture.of(new TodoListAggregate())
+                .given(created())
+                .when(new TodoListDeleteCommand(LIST))
+                .expectEvent(new TodoListDeletedEvent(LIST));
     }
 }

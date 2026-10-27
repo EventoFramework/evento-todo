@@ -2,6 +2,7 @@ package com.eventoframework.demo.todo.service.observer;
 
 import com.evento.common.messaging.gateway.CommandGateway;
 import com.evento.common.messaging.gateway.QueryGateway;
+import com.evento.common.messaging.gateway.QueryOptions;
 import com.evento.common.modeling.annotations.component.Observer;
 import com.evento.common.modeling.annotations.handler.EventHandler;
 import com.evento.common.modeling.messaging.message.application.EventMessage;
@@ -22,7 +23,9 @@ public class TodoListNotificationObserver {
                    CommandGateway commandGateway,
                    QueryGateway queryGateway,
                    EventMessage<?> message) throws ExecutionException, InterruptedException {
-        var todoList = queryGateway.query(new TodoListViewFindByIdentifierQuery(event.getIdentifier())).get().getData();
+        var todoList = queryGateway.queryWith(new TodoListViewFindByIdentifierQuery(event.getIdentifier()),
+                // the projector may not have processed this event yet: wait until it has
+                QueryOptions.defaults().readYourWrites()).get().getData();
         var todo = todoList.getTodos().stream().filter(t -> t.getIdentifier().equals(event.getTodoIdentifier())).findFirst().orElseThrow();
         var body = """
                 You have checked the todo "%s" (%s) inside %s (%s) at %s
