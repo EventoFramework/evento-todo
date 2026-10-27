@@ -1,11 +1,13 @@
 package com.eventoframework.demo.todo.api.todo.view;
 
+import com.evento.common.documentation.Domain;
+import com.evento.common.modeling.messaging.payload.View;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.evento.common.documentation.Domain;
-import com.evento.common.modeling.messaging.payload.View;
+
+import java.time.ZonedDateTime;
 
 @Domain(name = "TodoList")
 @NoArgsConstructor
@@ -15,4 +17,8 @@ import com.evento.common.modeling.messaging.payload.View;
 public class TodoListListItemView implements View {
     private String identifier;
     private String name;
+    private String createdBy;
+    private ZonedDateTime createdAt;
+    private String status;
+    private int todos;
 }

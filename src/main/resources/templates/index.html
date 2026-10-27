@@ -19,12 +19,23 @@
 <main>
     <div class="error" th:if="${error}" th:text="${error}">error</div>
 
-    <!-- First visit: pick a display name (becomes message Metadata "user") -->
+    <div class="card notice" th:if="${forgotten}">
+        <h2>You have been forgotten</h2>
+        <p class="muted">
+            Your key was deleted (<code>SubjectKeys.forget</code>). The events you wrote are still in the
+            event store, but the name inside them is encrypted with a key that no longer exists: it reads as
+            <code>null</code> everywhere, even from a backup or a replay. Your lists now show
+            <em>forgotten user</em>. Your id was <code th:text="${forgotten}">USR_…</code>.
+        </p>
+    </div>
+
+    <!-- First visit: pick a display name (personal data, stored encrypted) -->
     <div class="card" th:if="${user == null}">
         <h2>Who are you?</h2>
         <p class="muted">
-            Your name travels as <code>Metadata</code> on every Command you send — watch it flow
-            through the system in the <a href="https://www.eventoframework.com/demo/">Evento GUI</a>.
+            Your name is <strong>personal data</strong>: it is stored in the event store encrypted with a key
+            of your own (<code>@PersonalData</code>), and only a pseudonymous id travels as message
+            <code>Metadata</code>. You can make Evento forget it at any time.
         </p>
         <form method="post" action="/user" class="row">
             <input class="grow" type="text" name="name" placeholder="e.g. Ada" required maxlength="40">
@@ -38,7 +49,8 @@
             <p class="muted">
                 Submitting this form sends a <code>TodoListCreateCommand</code> to the
                 <code>TodoListAggregate</code>, which validates it and emits a
-                <code>TodoListCreatedEvent</code> into the event store.
+                <code>TodoListCreatedEvent</code> into the event store. The next page
+                <strong>reads its own write</strong>: it is answered once the projector has the new list.
             </p>
             <form method="post" action="/todo-list" class="row">
                 <input class="grow" type="text" name="name" placeholder="List name" required maxlength="80">
@@ -53,18 +65,65 @@
                     <input type="text" name="nameLike" placeholder="Search…" th:value="${nameLike}">
                     <button type="submit" class="ghost">Search</button>
                 </form>
+                <a class="btn ghost" href="/export.csv" title="Streamed query">Export CSV</a>
             </div>
             <p class="muted">
-                This list is served by <code>TodoListProjection</code> from a read model kept
-                up-to-date by <code>TodoListProjector</code> — updates stream in live over SSE.
+                A <code>Page</code> served by <code>TodoListProjection</code> from a read model kept up to date
+                by <code>TodoListProjector</code>; changes stream in live over SSE. <em>Export CSV</em> is a
+                <strong>streamed query</strong>: the projection reads a database cursor only as fast as your
+                browser downloads.
             </p>
-            <div class="todo" th:each="list : ${lists}">
+            <div class="todo" th:each="list : ${lists.data}">
                 <a class="content" th:href="@{'/todo-list/' + ${list.identifier}}"
                    th:text="${list.name}">List name</a>
+                <small class="muted" th:text="${list.todos} + ' todos · by ' + ${list.createdBy ?: '?'}">by</small>
             </div>
-            <p class="muted" th:if="${#lists.isEmpty(lists)}">No lists yet — create the first one.</p>
+            <p class="muted" th:if="${#lists.isEmpty(lists.data)}">No lists yet — create the first one.</p>
+            <div class="row pager" th:if="${lists.totalPages > 1}">
+                <a class="btn ghost" th:if="${lists.number > 0}"
+                   th:href="@{/(nameLike=${nameLike}, page=${lists.number - 1})}">‹ Previous</a>
+                <span class="muted grow"
+                      th:text="'Page ' + ${lists.number + 1} + ' of ' + ${lists.totalPages} + ' · ' + ${lists.totalElements} + ' lists'">Page</span>
+                <a class="btn ghost" th:if="${lists.hasNext()}"
+                   th:href="@{/(nameLike=${nameLike}, page=${lists.number + 1})}">Next ›</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Your personal data</h2>
+            <p class="muted">
+                You are <strong th:text="${user}">Ada</strong>, known to the system as
+                <code th:text="${userId}">USR_…</code>. Forgetting you deletes your key: the events stay,
+                your name in them becomes unreadable for good (crypto-shredding), and the read model drops
+                its copy on <code>UserForgottenEvent</code>.
+            </p>
+            <form method="post" action="/user/forget">
+                <button type="submit" class="danger">Forget me</button>
+            </form>
         </div>
     </th:block>
+
+    <div class="card">
+        <h2>What this demo shows of Evento 3.0</h2>
+        <ul class="features">
+            <li><strong>Spring Boot starter</strong>: the bundle is configured from <code>evento.bundle.*</code>
+                properties (<a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/resources/application.properties">application.properties</a>).</li>
+            <li><strong>Hardened server</strong>: the Evento Server runs the <code>prod</code> security profile,
+                with a bus token, TLS, a payload allowlist and a read-only public console.</li>
+            <li><strong>Read your writes</strong>: after every action the page is answered only once the
+                projectors have your change (<a href="https://docs.eventoframework.com/evento-framework/component/projection/read-your-writes">docs</a>).</li>
+            <li><strong>Personal data and the right to erasure</strong>: names stored encrypted, <em>Forget me</em>
+                deletes the key (<a href="https://docs.eventoframework.com/evento-framework/personal-data">docs</a>).</li>
+            <li><strong>Several events from one command</strong>: <em>Check all</em> returns
+                <code>DomainEvents</code>, one event per todo, stored all or none.</li>
+            <li><strong>Paged and streamed queries</strong>: the list above is a <code>Page</code>, the CSV export
+                a stream (<a href="https://docs.eventoframework.com/evento-framework/component/projection/streaming-and-paged-queries">docs</a>).</li>
+            <li><strong>Payload versioning</strong>: <code>TodoListCreatedEvent</code> is at <code>@Revision(1)</code>,
+                with an upcaster for the events written before (<a href="https://docs.eventoframework.com/evento-framework/payload-and-messages/payload-versioning">docs</a>).</li>
+            <li><strong>Test fixtures</strong>: the aggregates, the saga and the services are tested given/when/then
+                with <code>evento-test</code>, no server needed.</li>
+        </ul>
+    </div>
 
     <div class="src-links">
         Components behind this page:
@@ -72,6 +131,7 @@
         <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/command/todo/TodoListAggregate.java">@Aggregate</a>
         <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/query/TodoListProjector.java">@Projector</a>
         <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/query/TodoListProjection.java">@Projection</a>
+        <a href="https://github.com/EventoFramework/evento-todo/blob/main/src/main/java/com/eventoframework/demo/todo/command/user/UserPrivacyService.java">@Service (erasure)</a>
     </div>
 </main>
 <footer class="site">

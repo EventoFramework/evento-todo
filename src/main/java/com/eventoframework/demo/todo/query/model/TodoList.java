@@ -14,6 +14,7 @@ import lombok.Setter;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 @Entity
 @NoArgsConstructor
@@ -33,19 +34,21 @@ public class TodoList {
     private ZonedDateTime registeredAt;
     private TodoListStatus status;
 
-    public TodoListView toView() {
+    /** {@code names} turns the pseudonymous user ids of the events into display names. */
+    public TodoListView toView(UnaryOperator<String> names) {
         return new TodoListView(getIdentifier(),
                 getName(),
-                new ArrayList<>(getTodos().stream().map(Todo::toView).toList()),
-                getCreatedBy(),
-                getUpdatedBy(),
+                new ArrayList<>(getTodos().stream().map(t -> t.toView(names)).toList()),
+                names.apply(getCreatedBy()),
+                names.apply(getUpdatedBy()),
                 getCreatedAt(),
                 getUpdatedAt(),
                 getStatus() == null ? null : getStatus().name());
     }
 
-    public TodoListListItemView toListItemView() {
-        return new TodoListListItemView(getIdentifier(), getName());
+    public TodoListListItemView toListItemView(UnaryOperator<String> names) {
+        return new TodoListListItemView(getIdentifier(), getName(), names.apply(getCreatedBy()), getCreatedAt(),
+                getStatus() == null ? null : getStatus().name(), getTodos().size());
     }
 
 }

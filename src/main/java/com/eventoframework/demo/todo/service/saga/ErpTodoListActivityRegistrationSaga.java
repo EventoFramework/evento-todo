@@ -32,14 +32,14 @@ public class ErpTodoListActivityRegistrationSaga {
     public void on(TodoListTodoAddedEvent event,
                    ErpTodoListActivityRegistrationSagaState state,
                    Metadata metadata){
-        var user = metadata.get("user");
+        var user = userOf(metadata);
         state.getUsages().put(user, state.getUsages().getOrDefault(user, 0) + 1);
     }
 
     @SagaEventHandler(associationProperty = "identifier")
     public void on(TodoListTodoRemovedEvent event, ErpTodoListActivityRegistrationSagaState state,
                    Metadata metadata){
-        var user = metadata.get("user");
+        var user = userOf(metadata);
         state.getUsages().put(user, state.getUsages().getOrDefault(user, 0) + 1);
     }
 
@@ -48,7 +48,7 @@ public class ErpTodoListActivityRegistrationSaga {
                    ErpTodoListActivityRegistrationSagaState state,
                    Metadata metadata,
                    CommandGateway commandGateway) throws Exception {
-        var user = metadata.get("user");
+        var user = userOf(metadata);
         state.getUsages().put(user, state.getUsages().getOrDefault(user, 0) + 1);
         if(event.isAllChecked()){
             state.setAssociation("resourceIdentifier", event.getIdentifier());
@@ -64,5 +64,11 @@ public class ErpTodoListActivityRegistrationSaga {
     @SagaEventHandler(associationProperty = "resourceIdentifier")
     public void on(ErpUserActivityRegisteredEvent event, ErpTodoListActivityRegistrationSagaState state){
         state.setEnded(true);
+    }
+
+    /** The user who caused the event; events published without metadata count as "unknown". */
+    private static String userOf(Metadata metadata) {
+        var user = metadata == null ? null : metadata.get("user");
+        return user == null ? "unknown" : user;
     }
 }

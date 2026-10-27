@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
+import java.util.function.UnaryOperator;
 
 @Embeddable
 @NoArgsConstructor
@@ -22,13 +23,13 @@ public class Todo {
     private ZonedDateTime createdAt;
     private ZonedDateTime completedAt;
 
-    public TodoView toView() {
+    public TodoView toView(UnaryOperator<String> names) {
         return new TodoView(
                 identifier,
                 content,
                 completedAt != null,
-                createdBy,
-                completedBy,
+                names.apply(createdBy),
+                names.apply(completedBy),
                 createdAt,
                 completedAt
         );

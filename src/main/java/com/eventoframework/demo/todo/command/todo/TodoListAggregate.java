@@ -3,11 +3,14 @@ package com.eventoframework.demo.todo.command.todo;
 import com.evento.common.modeling.annotations.component.Aggregate;
 import com.evento.common.modeling.annotations.handler.AggregateCommandHandler;
 import com.evento.common.modeling.annotations.handler.EventSourcingHandler;
+import com.evento.common.modeling.messaging.payload.DomainEvents;
 import com.eventoframework.demo.todo.api.todo.command.*;
 import com.eventoframework.demo.todo.api.todo.event.*;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 @Aggregate
 public class TodoListAggregate {
@@ -103,6 +106,26 @@ public class TodoListAggregate {
                 state.getTodos().entrySet().stream()
                         .filter(e -> !e.getKey().equals(command.getTodoIdentifier()))
                         .allMatch(java.util.Map.Entry::getValue));
+    }
+
+    /**
+     * Evento 3.0: one command, several events. Each open todo gets its own
+     * TodoListTodoCheckedEvent (consumers react to each one), stored all or none in one
+     * transaction, the last one completing the list.
+     */
+    @AggregateCommandHandler(produces = TodoListTodoCheckedEvent.class)
+    public DomainEvents handle(TodoListCheckAllCommand command, TodoListAggregateState state){
+        var open = state.getTodos().entrySet().stream()
+                .filter(e -> !e.getValue())
+                .map(Map.Entry::getKey)
+                .sorted()
+                .toList();
+        Assert.isTrue(!open.isEmpty(), "Error: Nothing to check");
+        var events = new ArrayList<TodoListTodoCheckedEvent>();
+        for (int i = 0; i < open.size(); i++) {
+            events.add(new TodoListTodoCheckedEvent(command.getIdentifier(), open.get(i), i == open.size() - 1));
+        }
+        return DomainEvents.of(events);
     }
 
     @EventSourcingHandler

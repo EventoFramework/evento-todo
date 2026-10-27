@@ -43,7 +43,7 @@ public class TodoListProjector {
                    ProjectorStatus projectorStatus) {
         repository.save(new TodoList(
                 event.getIdentifier(),
-                event.getContent(),
+                event.getName(),
                 message.getMetadata() == null ? null : message.getMetadata().get("user"),
                 null,
                 Instant.ofEpochMilli(message.getTimestamp()).atZone(ZoneId.systemDefault()),
