@@ -32,8 +32,8 @@ Every RECQ component type appears in plain Java classes:
 ## Stack
 
 - Java 25, Spring Boot 4.1, Thymeleaf server-rendered UI (no JS build)
-- [`evento-spring-boot-starter`](https://central.sonatype.com/artifact/com.eventoframework/evento-spring-boot-starter) 3.0.1
-  connected to an [Evento Server](https://hub.docker.com/r/eventoframework/evento-server) 3.0.1
+- [`evento-spring-boot-starter`](https://central.sonatype.com/artifact/com.eventoframework/evento-spring-boot-starter) 3.0.2
+  connected to an [Evento Server](https://hub.docker.com/r/eventoframework/evento-server) 3.0.2
 - Postgres for both the read model and the Evento consumer state
   (`evento_v2_*` tables, created automatically at startup)
 - Live updates via Server-Sent Events, fed in-JVM by the Projector
