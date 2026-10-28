@@ -22,7 +22,7 @@ services:
       - evento-db-data:/var/lib/postgresql/data
 
   evento-server:
-    image: eventoframework/evento-server:3.0.0
+    image: eventoframework/evento-server:3.0.1
     restart: on-failure
     depends_on:
       - evento-db

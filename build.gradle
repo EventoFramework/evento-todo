@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.eventoframework.demo.todo'
-version = '3.0.0'
+version = '3.0.1'
 
 java {
     toolchain {
@@ -32,9 +32,9 @@ dependencies {
 
     // Evento 3.0: the starter builds, starts and stops the bundle from evento.bundle.* properties,
     // with the consumer state in the application's Postgres (tables created on first start).
-    implementation 'com.eventoframework:evento-spring-boot-starter:3.0.0'
-    implementation 'com.eventoframework:evento-bundle:3.0.0'
-    implementation 'com.eventoframework.evento-consumer-state-store:evento-consumer-state-store-jdbc:3.0.0'
+    implementation 'com.eventoframework:evento-spring-boot-starter:3.0.1'
+    implementation 'com.eventoframework:evento-bundle:3.0.1'
+    implementation 'com.eventoframework.evento-consumer-state-store:evento-consumer-state-store-jdbc:3.0.1'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -42,7 +42,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // Given/when/then fixtures for aggregates, sagas and services (no server, no database)
-    testImplementation 'com.eventoframework:evento-test:3.0.0'
+    testImplementation 'com.eventoframework:evento-test:3.0.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
