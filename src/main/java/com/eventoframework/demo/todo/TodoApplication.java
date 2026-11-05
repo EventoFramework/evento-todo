@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TodoApplication {
     public static void main(String[] args) {
-        SpringApplication.run(TodoApplication.class, args);
+        var application = new SpringApplication(TodoApplication.class);
+        application.addListeners(new StartupFailureWatchdog());
+        application.run(args);
     }
 }
